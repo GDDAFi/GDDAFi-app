@@ -2,60 +2,117 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GddaFi Play - Mining</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GddaFi Play - التعدين الذهبي</title>
     
-    <!-- ✅ كود الربح الخاص بك (Adsterra) -->
-    <script src="https://profitablecpmratenetwork.com"></script>
+    <!-- كود الإعلانات الخاص بك -->
+    <script src="https://pl29042900.profitablecpmratenetwork.com/67/d9/1b/67d91bfab7947c9808641625010d7e0c.js"></script>
     
     <style>
-        :root {
-            --bg: linear-gradient(135deg, #1a0033 0%, #05000a 100%);
-            --accent: #8a2be2;
-            --gold: #ffd700;
-        }
-        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; text-align: center; }
-        .lang-select { position: absolute; top: 20px; right: 20px; background: rgba(138,43,226,0.2); border: 1px solid var(--accent); color: white; padding: 8px; border-radius: 10px; cursor: pointer; z-index: 100; }
-        .counter { font-size: 2.8rem; font-weight: bold; color: var(--gold); text-shadow: 0 0 25px rgba(255,215,0,0.8); margin-bottom: 10px; }
-        .coin-box { width: 250px; height: 250px; perspective: 1000px; margin-bottom: 30px; position: relative; }
-        .gold-coin { width: 100%; height: 100%; background: url('https://imgur.com') center/cover; border-radius: 50%; box-shadow: 0 0 60px rgba(255,215,0,0.4), inset 0 0 30px #ffd700; border: 5px solid #ffd700; animation: spin 5s linear infinite; }
-        @keyframes spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-        .mine-btn { background: linear-gradient(45deg, #4b0082, #8a2be2); border: none; color: white; padding: 20px 45px; border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 10px 30px rgba(138, 43, 226, 0.6); }
+        /* نفس الستايلات السابقة - اختصاراً سأضعها كما هي */
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        :root { --bg-start: #0a0a1a; --bg-end: #1a0a2e; --gold: #ffd700; --purple: #8a2be2; }
+        body { background: linear-gradient(135deg, var(--bg-start), var(--bg-end)); color: white; font-family: 'Segoe UI', Tahoma, sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { max-width: 450px; width: 100%; text-align: center; background: rgba(0,0,0,0.2); border-radius: 60px; padding: 20px 15px; backdrop-filter: blur(5px); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .lang-select { background: rgba(138,43,226,0.4); border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 30px; font-weight: bold; cursor: pointer; }
+        .boost-btn { width: 55px; height: 55px; border-radius: 50%; background: linear-gradient(145deg, var(--purple), #4a0080); border: 2px solid var(--gold); color: var(--gold); font-size: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 15px var(--purple); transition: 0.1s; }
+        .boost-btn:active { transform: scale(0.92); }
+        .balance { font-size: 3rem; font-weight: bold; font-family: monospace; color: var(--gold); text-shadow: 0 0 20px rgba(255,215,0,0.6); background: rgba(0,0,0,0.4); display: inline-block; padding: 8px 25px; border-radius: 60px; margin: 15px 0; }
+        .coin-wrapper { perspective: 800px; margin: 20px auto; width: 220px; height: 220px; cursor: pointer; }
+        .gold-coin { width: 100%; height: 100%; background: radial-gradient(circle at 35% 35%, #ffe680, #d4af37, #aa7c11); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 5rem; font-weight: bold; color: #b8860b; text-shadow: 2px 2px 0 #ffec80; box-shadow: 0 0 40px rgba(255,215,0,0.5), inset 0 0 20px rgba(255,250,180,0.8); border: 4px solid #ffec80; transition: transform 0.05s; animation: floatCoin 3s infinite ease-in-out; }
+        .gold-coin:active { transform: scale(0.94); }
+        @keyframes floatCoin { 0%,100% { transform: translateY(0) rotateY(0deg); } 50% { transform: translateY(-8px) rotateY(15deg); } }
+        .mine-btn { background: linear-gradient(45deg, #4b0082, var(--purple)); border: none; color: white; font-size: 1.3rem; font-weight: bold; padding: 14px 35px; border-radius: 50px; margin: 15px 0; width: 85%; cursor: pointer; }
+        .mine-btn:active { transform: scale(0.97); }
+        .ref-btn { background: transparent; border: 2px dashed var(--gold); color: var(--gold); padding: 10px 20px; border-radius: 40px; font-size: 1rem; font-weight: bold; width: 75%; cursor: pointer; margin-top: 10px; }
+        .info { font-size: 0.7rem; color: #aaa; margin-top: 20px; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); color: gold; padding: 8px 20px; border-radius: 40px; font-size: 14px; z-index: 999; animation: fadeOut 2s forwards; border: 1px solid gold; pointer-events: none; }
+        @keyframes fadeOut { 0% { opacity: 0; transform: translateX(-50%) translateY(20px); } 20% { opacity: 1; transform: translateX(-50%) translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+        @media (max-width: 480px) { .balance { font-size: 2rem; } .coin-wrapper { width: 180px; height: 180px; } .mine-btn { font-size: 1rem; } }
     </style>
 </head>
 <body>
-
-    <select class="lang-select" onchange="changeL(this.value)">
-        <option value="ar">العربية 🇸🇦</option>
-        <option value="en">English 🇺🇸</option>
-        <option value="zh">中文 🇨🇳</option>
-        <option value="fa">فارسی 🇮🇷</option>
-    </select>
-
-    <div class="counter" id="bal">0.000000</div>
-
-    <div class="coin-box">
-        <div class="gold-coin"></div>
+<div class="container">
+    <div class="header">
+        <select id="langSwitcher" class="lang-select"><option value="ar">🇸🇦 العربية</option><option value="en">🇬🇧 English</option></select>
+        <div class="boost-btn" id="boostBtn">⚡</div>
     </div>
+    <div class="balance" id="balanceDisplay">0.00000000</div>
+    <div class="coin-wrapper"><div class="gold-coin" id="coin">🪙</div></div>
+    <button class="mine-btn" id="mineBtn">💰 تعدين القذافي 💰</button>
+    <button class="ref-btn" id="refBtn">👥 الإحالات + مكافأة</button>
+    <div class="info">✨ اضغط على العملة | تعديل تلقائي يومي | إعلانات تدعم التطوير ✨</div>
+</div>
 
-    <button class="mine-btn" id="mBtn" onclick="mineAction()">
-        Mining Gaddafi tokens ♻️
-    </button>
+<script>
+    // نفس الجافاسكربت السابق مع تحسين نظام الإحالة لقراءة ref من الرابط
+    let balance = parseFloat(localStorage.getItem('gaddafi_bal')) || 0;
+    let totalMined = parseFloat(localStorage.getItem('gaddafi_total')) || 0;
+    let referrals = parseInt(localStorage.getItem('gaddafi_refs')) || 0;
+    const AUTO_RATE = 0.000003;
+    const CLICK_REWARD = 0.000015;
+    const BOOST_REWARD = 0.0004;
+    const REF_REWARD = 0.008;
 
-    <script>
-        let b = 0.0;
-        const rate = 1 / 86400; // سرعة عملة واحدة كل 24 ساعة
-        setInterval(() => { b += rate; document.getElementById('bal').innerText = b.toFixed(6); }, 1000);
+    const balanceEl = document.getElementById('balanceDisplay');
+    const coin = document.getElementById('coin');
+    const mineBtn = document.getElementById('mineBtn');
+    const refBtn = document.getElementById('refBtn');
+    const boostBtn = document.getElementById('boostBtn');
+    const langSwitcher = document.getElementById('langSwitcher');
 
-        function mineAction() {
-            alert("تم بدء دورة التعدين! شاهد الإعلانات لزيادة أرباحك.");
-            // كود الإعلان سيعمل تلقائياً من السكريبت في الرأس
+    const langData = {
+        ar: { mine: '💰 تعدين القذافي 💰', ref: '👥 الإحالات + مكافأة', boostMsg: '⚡ تعزيز +0.0004 ⚡', clickMsg: '⛏️ تعدين سريع +0.000015', mineMsg: '🔥 تعدين +0.00003 🔥', refCopied: '✅ تم نسخ رابط الإحالة!', refBonus: '🎁 مكافأة إحالة +0.008 🎁', shareBonus: '🎉 مكافأة مشاركة +0.002 🎉', error: '❌ حدث خطأ' },
+        en: { mine: '💰 Mine Gaddafi Coin 💰', ref: '👥 Referrals + Bonus', boostMsg: '⚡ Boost +0.0004 ⚡', clickMsg: '⛏️ Quick mine +0.000015', mineMsg: '🔥 Mining +0.00003 🔥', refCopied: '✅ Referral link copied!', refBonus: '🎁 Referral bonus +0.008 🎁', shareBonus: '🎉 Sharing bonus +0.002 🎉', error: '❌ Error occurred' }
+    };
+    let currentLang = localStorage.getItem('lang') || 'ar';
+    langSwitcher.value = currentLang;
+
+    function updateUI() { balanceEl.innerText = balance.toFixed(8); localStorage.setItem('gaddafi_bal', balance); localStorage.setItem('gaddafi_total', totalMined); }
+    function showToast(msg, isError) { let old = document.querySelector('.toast'); if(old) old.remove(); let toast = document.createElement('div'); toast.className = 'toast'; toast.innerText = msg; if(isError) toast.style.color = '#ff8888'; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000); }
+    function updateTexts() { mineBtn.innerText = langData[currentLang].mine; refBtn.innerText = langData[currentLang].ref; }
+
+    setInterval(() => { balance += AUTO_RATE; totalMined += AUTO_RATE; updateUI(); }, 1000);
+    coin.addEventListener('click', () => { balance += CLICK_REWARD; totalMined += CLICK_REWARD; updateUI(); showToast(langData[currentLang].clickMsg); coin.style.transform = 'scale(0.94)'; setTimeout(() => coin.style.transform = '', 100); });
+    mineBtn.addEventListener('click', () => { if(typeof show_8641625 === 'function') show_8641625(); balance += CLICK_REWARD * 2; totalMined += CLICK_REWARD * 2; updateUI(); showToast(langData[currentLang].mineMsg); });
+    boostBtn.addEventListener('click', () => { if(typeof show_8641625 === 'function') show_8641625(); balance += BOOST_REWARD; totalMined += BOOST_REWARD; updateUI(); showToast(langData[currentLang].boostMsg); boostBtn.style.transform = 'scale(0.9)'; setTimeout(() => boostBtn.style.transform = '', 150); });
+    
+    refBtn.addEventListener('click', () => {
+        let userId = localStorage.getItem('gaddafi_user_id');
+        if (!userId) { userId = Math.random().toString(36).substring(2, 12); localStorage.setItem('gaddafi_user_id', userId); }
+        const link = `${window.location.origin}${window.location.pathname}?ref=${userId}`;
+        navigator.clipboard.writeText(link).then(() => showToast(langData[currentLang].refCopied)).catch(() => showToast(langData[currentLang].error, true));
+        let lastShare = localStorage.getItem('last_share_bonus') || 0;
+        const now = Date.now();
+        if (now - lastShare > 7200000) { balance += 0.002; updateUI(); localStorage.setItem('last_share_bonus', now); showToast(langData[currentLang].shareBonus); }
+    });
+
+    function handleReferral() {
+        const params = new URLSearchParams(window.location.search);
+        const refCode = params.get('ref');
+        const myId = localStorage.getItem('gaddafi_user_id');
+        if (refCode && refCode !== myId) {
+            const claimedKey = `ref_claimed_${refCode}`;
+            if (!localStorage.getItem(claimedKey)) {
+                balance += REF_REWARD;
+                referrals++;
+                localStorage.setItem('gaddafi_refs', referrals);
+                localStorage.setItem(claimedKey, 'true');
+                updateUI();
+                showToast(langData[currentLang].refBonus);
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
         }
+    }
 
-        function changeL(l) {
-            const t = { ar:"تعدين عملات القذافي ♻️", en:"Mining Gaddafi tokens ♻️", zh:"开采卡扎菲代币 ♻️", fa:"استخراج توکن های قذافی ♻️" };
-            document.getElementById('mBtn').innerText = t[l];
-        }
-    </script>
+    langSwitcher.addEventListener('change', (e) => { currentLang = e.target.value; localStorage.setItem('lang', currentLang); updateTexts(); });
+    function loadData() { balance = parseFloat(localStorage.getItem('gaddafi_bal')) || 0; totalMined = parseFloat(localStorage.getItem('gaddafi_total')) || 0; referrals = parseInt(localStorage.getItem('gaddafi_refs')) || 0; updateUI(); }
+    window.addEventListener('beforeunload', () => { localStorage.setItem('gaddafi_bal', balance); localStorage.setItem('gaddafi_total', totalMined); localStorage.setItem('gaddafi_refs', referrals); });
+    loadData();
+    handleReferral();
+    updateTexts();
+    console.log('✅ GddaFi Gold Edition - جاهز للنشر على GitHub');
+</script>
 </body>
 </html>
