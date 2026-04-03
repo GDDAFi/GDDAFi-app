@@ -3,169 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GddaFi Play - Mining App</title>
-    <!-- كود إعلانات Adsterra الخاص بك -->
+    <title>GddaFi Play - Mining</title>
+    
+    <!-- ✅ كود الربح الخاص بك (Adsterra) -->
     <script src="https://profitablecpmratenetwork.com"></script>
     
     <style>
         :root {
-            --bg-color: linear-gradient(135deg, #1a0033 0%, #05000a 100%);
-            --accent-purple: #8a2be2;
+            --bg: linear-gradient(135deg, #1a0033 0%, #05000a 100%);
+            --accent: #8a2be2;
             --gold: #ffd700;
         }
-
-        body {
-            background: var(--bg-color);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        /* زر اختيار اللغة في الزاوية العلوية اليمنى */
-        .lang-container {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-        }
-
-        .lang-select {
-            background: rgba(138, 43, 226, 0.2);
-            border: 1px solid var(--accent-purple);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-size: 14px;
-            cursor: pointer;
-            outline: none;
-        }
-
-        /* عداد التعدين الحي */
-        .mining-counter {
-            font-size: 2.8rem;
-            font-weight: bold;
-            color: var(--gold);
-            text-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
-            margin-bottom: 15px;
-            letter-spacing: 2px;
-        }
-
-        /* حاوية العملة الذهبية الدوارة */
-        .coin-wrapper {
-            position: relative;
-            width: 260px;
-            height: 260px;
-            perspective: 1000px;
-        }
-
-        .gold-coin {
-            width: 100%;
-            height: 100%;
-            background: url('https://imgur.com') center/cover;
-            border-radius: 50%;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3), inset 0 0 30px #ffd700;
-            border: 6px solid #ffd700;
-            animation: spin3d 6s linear infinite;
-        }
-
-        @keyframes spin3d {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
-        }
-
-        /* زر التعدين والتعزيز */
-        .main-btn {
-            margin-top: 50px;
-            background: linear-gradient(45deg, #4b0082, #8a2be2);
-            border: none;
-            color: white;
-            padding: 22px 50px;
-            border-radius: 60px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.6);
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .main-btn:active { transform: scale(0.92); }
-
-        .boost-info {
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: #aaa;
-        }
+        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; text-align: center; }
+        .lang-select { position: absolute; top: 20px; right: 20px; background: rgba(138,43,226,0.2); border: 1px solid var(--accent); color: white; padding: 8px; border-radius: 10px; cursor: pointer; z-index: 100; }
+        .counter { font-size: 2.8rem; font-weight: bold; color: var(--gold); text-shadow: 0 0 25px rgba(255,215,0,0.8); margin-bottom: 10px; }
+        .coin-box { width: 250px; height: 250px; perspective: 1000px; margin-bottom: 30px; position: relative; }
+        .gold-coin { width: 100%; height: 100%; background: url('https://imgur.com') center/cover; border-radius: 50%; box-shadow: 0 0 60px rgba(255,215,0,0.4), inset 0 0 30px #ffd700; border: 5px solid #ffd700; animation: spin 5s linear infinite; }
+        @keyframes spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        .mine-btn { background: linear-gradient(45deg, #4b0082, #8a2be2); border: none; color: white; padding: 20px 45px; border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 10px 30px rgba(138, 43, 226, 0.6); }
     </style>
 </head>
 <body>
 
-    <!-- اختيار اللغة -->
-    <div class="lang-container">
-        <select class="lang-select" onchange="switchLang(this.value)">
-            <option value="en">English 🇺🇸</option>
-            <option value="zh">中文 🇨🇳</option>
-            <option value="fa">فارسی 🇮🇷</option>
-            <option value="ar">العربية 🇸🇦</option>
-        </select>
-    </div>
+    <select class="lang-select" onchange="changeL(this.value)">
+        <option value="ar">العربية 🇸🇦</option>
+        <option value="en">English 🇺🇸</option>
+        <option value="zh">中文 🇨🇳</option>
+        <option value="fa">فارسی 🇮🇷</option>
+    </select>
 
-    <!-- عداد التعدين الحي (1 عملة كل 24 ساعة) -->
-    <div class="mining-counter" id="totalMined">0.000000</div>
+    <div class="counter" id="bal">0.000000</div>
 
-    <!-- العملة الذهبية -->
-    <div class="coin-wrapper">
+    <div class="coin-box">
         <div class="gold-coin"></div>
     </div>
 
-    <!-- زر التعدين -->
-    <button class="main-btn" id="miningBtn" onclick="handleMiningAction()">
+    <button class="mine-btn" id="mBtn" onclick="mineAction()">
         Mining Gaddafi tokens ♻️
     </button>
 
-    <div class="boost-info" id="statusInfo">
-        Mining Rate: 1 GDF / 24h
-    </div>
-
     <script>
-        let balance = 0.000000;
-        // السرعة: 1 عملة / 86400 ثانية
-        const incrementPerSecond = 1 / 86400;
+        let b = 0.0;
+        const rate = 1 / 86400; // سرعة عملة واحدة كل 24 ساعة
+        setInterval(() => { b += rate; document.getElementById('bal').innerText = b.toFixed(6); }, 1000);
 
-        // تحديث العداد كل ثانية
-        setInterval(() => {
-            balance += incrementPerSecond;
-            document.getElementById('totalMined').innerText = balance.toFixed(6);
-        }, 1000);
-
-        function handleMiningAction() {
-            // تشغيل إعلان Adsterra فور الضغط
-            if(window.show_8641625) {
-                window.show_8641625();
-            } else {
-                console.log("Ad script loading...");
-            }
-            alert("Mining Cycle Started! ⚡ | بدأت دورة التعدين!");
+        function mineAction() {
+            alert("تم بدء دورة التعدين! شاهد الإعلانات لزيادة أرباحك.");
+            // كود الإعلان سيعمل تلقائياً من السكريبت في الرأس
         }
 
-        function switchLang(lang) {
-            const translations = {
-                en: { btn: "Mining Gaddafi tokens ♻️", info: "Mining Rate: 1 GDF / 24h" },
-                zh: { btn: "开采卡扎菲代币 ♻️", info: "开采率: 1 GDF / 24小时" },
-                fa: { btn: "استخراج توکن های قذافی ♻️", info: "نرخ استخراج: 1 GDF / 24 ساعت" },
-                ar: { btn: "تعدين عملات القذافي ♻️", info: "سرعة التعدين: 1 عملة / 24 ساعة" }
-            };
-            document.getElementById('miningBtn').innerText = translations[lang].btn;
-            document.getElementById('statusInfo').innerText = translations[lang].info;
+        function changeL(l) {
+            const t = { ar:"تعدين عملات القذافي ♻️", en:"Mining Gaddafi tokens ♻️", zh:"开采卡扎菲代币 ♻️", fa:"استخراج توکن های قذافی ♻️" };
+            document.getElementById('mBtn').innerText = t[l];
         }
     </script>
 </body>
