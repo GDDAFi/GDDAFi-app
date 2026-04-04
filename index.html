@@ -1,172 +1,213 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>GddaFi Gold</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GddaFi Play PRO</title>
+
+<!-- 💰 سكربت الإعلانات -->
+<script src="https://pl29042900.profitablecpmratenetwork.com/67/d9/1b/67d91bfab7947c9808641625010d7e0c.js"></script>
 
 <style>
-  * {
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-  }
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #0a0a0a;
+body {
+    margin: 0;
+    background: linear-gradient(135deg,#0a001a,#1a0033);
     color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-    direction: rtl;
-  }
-  .container {
-    background: #1a1a1a;
-    border-radius: 20px;
-    box-shadow: 0 0 20px gold;
-    width: 320px;
-    max-width: 100%;
-    padding: 30px 20px;
     text-align: center;
-  }
-  .header {
-    font-size: 28px;
-    margin-bottom: 10px;
-    font-weight: 700;
+    font-family: sans-serif;
+}
+
+.counter {
+    font-size: 3rem;
     color: gold;
-  }
-  .balance {
-    font-size: 48px;
-    color: #ffda00;
-    text-shadow: 0 0 12px #ffd700, 0 0 30px #ffea00;
-    margin-bottom: 20px;
-    font-family: 'Courier New', Courier, monospace;
-  }
-  .coin {
-    width: 180px;
-    height: 180px;
-    margin: 0 auto 20px auto;
+    margin-top: 40px;
+}
+
+.coin {
+    width: 220px;
+    height: 220px;
+    margin: 20px auto;
     border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0 40px gold, 0 0 80px rgba(255, 215, 0, 0.4);
-    background: black;
-    animation: float 3s infinite ease-in-out;
-    cursor: default;
-  }
-  .coin img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(1.2) contrast(1.1);
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-  }
-  .referrals {
-    margin-bottom: 25px;
-    font-size: 18px;
-    color: #3498db;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-  }
-  .referrals span {
-    font-weight: 600;
-  }
-  .buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-  }
-  button {
-    background: #6a00ff;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/7/7b/Libyan_gold_dinar_concept.jpg') center/cover;
+    animation: spin 6s linear infinite;
+}
+
+@keyframes spin {
+    from {transform: rotateY(0);}
+    to {transform: rotateY(360deg);}
+}
+
+button {
+    padding: 15px 25px;
+    margin: 10px;
+    border-radius: 20px;
     border: none;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 0 10px #6a00ff88;
-    transition: background 0.3s ease;
-    flex: 1 1 120px;
-  }
-  button:hover {
-    background: #8500ff;
-    box-shadow: 0 0 20px #8500ffcc;
-  }
-  /* Adsterra banner box */
-  .ad-box {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-  }
+}
+
+.mine { background: purple; color: #fff; }
+.boost { background: gold; }
+.ref { border: 1px dashed gold; padding: 10px; }
 </style>
 </head>
+
 <body>
-<div class="container">
-  <div class="header">💰 GddaFi Gold</div>
-  <div class="balance" id="balance">1.003129</div>
 
-  <div class="coin">
-    <img src="https://i.imgur.com/8Km9tLL.png" alt="دينار القدافي الذهبي" />
-  </div>
+<div class="counter" id="balance">0.000000</div>
+<div class="coin"></div>
 
-  <div class="referrals">
-    <span>الإحالات: 0</span> 👥
-  </div>
+<button class="mine" onclick="handleAction('mine')">⛏ تعدين يومي</button>
+<button class="boost" onclick="handleAction('boost')">⚡ تعزيز</button>
+<div class="ref" onclick="copyRef()">👥 دعوة +0.05</div>
 
-  <div class="buttons">
-    <button id="mineBtn">⛏️ تعدين</button>
-    <button id="dailyBtn">🎁 يومي</button>
-    <button id="boostBtn">⚡ تعزيز</button>
-    <button id="referralBtn">👥 إحالة</button>
-  </div>
-
-  <div class="ad-box">
-    <script src="https://pl29042900.profitablecpmratenetwork.com/67/d9/1b/67d91bfab7947c9808641625010d7e0c.js"></script>
-  </div>
-</div>
+<p id="refLink"></p>
 
 <script>
-  const balanceEl = document.getElementById('balance');
-  const referralsEl = document.querySelector('.referrals span');
+// ================== نظام البيانات ==================
+const DAY = 86400000;
+const MINUTE = 60000;
 
-  let balance = 1.003129;
-  let referrals = 0;
+let user = JSON.parse(localStorage.getItem("user")) || {
+    balance: 0,
+    rate: 1,
+    lastMine: 0,
+    lastBoost: 0,
+    boostsUsed: 0,
+    referrals: 0,
+    id: generateID()
+};
 
-  document.getElementById('mineBtn').addEventListener('click', () => {
-    balance += 0.001;
-    updateDisplay();
-  });
+// ================== توليد ID ==================
+function generateID() {
+    return 'user-' + Math.random().toString(36).substr(2,9);
+}
 
-  document.getElementById('dailyBtn').addEventListener('click', () => {
-    balance += 0.005;
-    updateDisplay();
-  });
+// ================== حفظ ==================
+function save() {
+    localStorage.setItem("user", JSON.stringify(user));
+}
 
-  document.getElementById('boostBtn').addEventListener('click', () => {
-    balance *= 1.02;
-    updateDisplay();
-  });
+// ================== تحديث الواجهة ==================
+function updateUI() {
+    document.getElementById("balance").innerText = user.balance.toFixed(6);
 
-  document.getElementById('referralBtn').addEventListener('click', () => {
-    referrals += 1;
-    balance += 0.002;
-    updateDisplay();
-  });
+    const link = location.origin + location.pathname + "?ref=" + user.id;
+    document.getElementById("refLink").innerText = link;
+}
 
-  function updateDisplay() {
-    balanceEl.textContent = balance.toFixed(6);
-    referralsEl.textContent = `الإحالات: ${referrals}`;
-  }
+// ================== نظام الإعلانات ==================
+function showAd() {
+    try {
+        if (typeof window.show_8641625 === "function") {
+            window.show_8641625();
+        }
+    } catch(e){}
+}
+
+// ================== الحماية ==================
+let lock = false;
+
+function protect() {
+    if (lock) return false;
+    lock = true;
+    setTimeout(()=> lock=false,2000);
+    return true;
+}
+
+// ================== التعدين ==================
+function mine() {
+    let now = Date.now();
+
+    if (now - user.lastMine < DAY) {
+        alert("⏳ مرة كل 24 ساعة فقط");
+        return;
+    }
+
+    user.balance += user.rate;
+    user.lastMine = now;
+
+    save();
+    updateUI();
+    alert("💰 تم التعدين");
+}
+
+// ================== التعزيز ==================
+function boost() {
+    let now = Date.now();
+
+    if (now - user.lastBoost < DAY) {
+        alert("⏳ مرة يومياً فقط");
+        return;
+    }
+
+    user.lastBoost = now;
+    save();
+
+    let count = 0;
+
+    let interval = setInterval(() => {
+        user.rate += 0.02;
+        count++;
+
+        if (count >= 7) {
+            clearInterval(interval);
+            save();
+            alert("✅ انتهت التعزيزات");
+        }
+    }, MINUTE);
+
+    alert("⚡ بدأ التعزيز");
+}
+
+// ================== الإحالة ==================
+function checkReferral() {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+
+    if (ref && ref !== user.id && !localStorage.getItem("ref_used")) {
+        user.balance += 0.05;
+        user.referrals += 1;
+
+        localStorage.setItem("ref_used", true);
+
+        save();
+        alert("🎉 حصلت على 0.05 من الإحالة");
+    }
+}
+
+// ================== نسخ رابط الدعوة ==================
+function copyRef() {
+    const link = location.origin + location.pathname + "?ref=" + user.id;
+
+    navigator.clipboard.writeText(link);
+    alert("📋 تم نسخ رابط الدعوة");
+}
+
+// ================== التحكم ==================
+function handleAction(type) {
+    if (!protect()) return;
+
+    showAd();
+
+    if (type === "mine") mine();
+    if (type === "boost") boost();
+}
+
+// ================== كشف الغش ==================
+setInterval(() => {
+    const now = Date.now();
+
+    if (user.lastMine > now || user.lastBoost > now) {
+        alert("🚫 تم اكتشاف تلاعب بالوقت");
+        localStorage.clear();
+        location.reload();
+    }
+}, 5000);
+
+// ================== تشغيل ==================
+checkReferral();
+updateUI();
 </script>
 
 </body>
 </html>
-
