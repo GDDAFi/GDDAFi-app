@@ -1,1 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GddaFi Play - Golden Edition</title>
+
+<!-- 💰 سكربت الإعلانات -->
 <script src="https://pl29042900.profitablecpmratenetwork.com/67/d9/1b/67d91bfab7947c9808641625010d7e0c.js"></script>
+
+<style>
+:root {
+    --bg: linear-gradient(135deg, #1a0033 0%, #05000a 100%);
+    --gold: #ffd700;
+    --purple: #8a2be2;
+}
+
+body {
+    background: var(--bg);
+    color: white;
+    font-family: sans-serif;
+    margin: 0;
+    text-align: center;
+}
+
+.counter {
+    font-size: 3rem;
+    color: var(--gold);
+    margin-top: 40px;
+}
+
+.coin {
+    width: 240px;
+    height: 240px;
+    margin: 20px auto;
+    border-radius: 50%;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/7/7b/Libyan_gold_dinar_concept.jpg') center/cover;
+    animation: spin 6s linear infinite;
+}
+
+@keyframes spin {
+    from {transform: rotateY(0);}
+    to {transform: rotateY(360deg);}
+}
+
+button {
+    padding: 15px 25px;
+    margin: 10px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.mine { background: purple; color: #fff; }
+.boost { background: gold; }
+
+.ref {
+    border: 1px dashed gold;
+    padding: 10px;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="counter" id="balance">0.000000</div>
+<div class="coin"></div>
+
+<button class="mine" id="mBtn" onclick="handleAction('mine')">⛏ تعدين</button>
+<button class="boost" onclick="handleAction('boost')">⚡ تعزيز</button>
+
+<div class="ref" id="rBtn" onclick="copyRef()">👥 إحالة</div>
+
+<p id="refLink"></p>
+
+<script>
+const DAY = 86400000;
+
+let user = JSON.parse(localStorage.getItem("user")) || {
+    balance: 0,
+    rate: 1,
+    lastMine: 0,
+    lastBoost: 0,
+    id: generateID()
+};
+
+function generateID() {
+    return 'user-' + Math.random().toString(36).substr(2,9);
+}
+
+function save() {
+    localStorage.setItem("user", JSON.stringify(user));
+}
+
+function updateUI() {
+    document.getElementById("balance").innerText = user.balance.toFixed(6);
+    document.getElementById("refLink").innerText =
+        location.origin + location.pathname + "?ref=" + user.id;
+}
+
+function showAd() {
+    try {
+        if (typeof window.show_8641625 === "function") {
+            window.show_8641625();
+        }
+    } catch(e){}
+}
+
+function mine() {
+    let now = Date.now();
+
+    if (now - user.lastMine < DAY) {
+        alert("⏳ مرة كل يوم");
+        return;
+    }
+
+    user.balance += user.rate;
+    user.lastMine = now;
+
+    save();
+    updateUI();
+    alert("💰 تم التعدين");
+}
+
+function boost() {
+    let now = Date.now();
+
+    if (now - user.lastBoost < DAY) {
+        alert("⏳ مرة يومياً");
+        return;
+    }
+
+    user.lastBoost = now;
+    user.rate += 0.5;
+
+    save();
+    updateUI();
+    alert("⚡ تم التعزيز");
+}
+
+function copyRef() {
+    const link = location.origin + location.pathname + "?ref=" + user.id;
+    navigator.clipboard.writeText(link);
+    alert("📋 تم النسخ");
+}
+
+function handleAction(type) {
+    showAd();
+
+    if (type === "mine") mine();
+    if (type === "boost") boost();
+}
+
+updateUI();
+</script>
+
+</body>
+</html>
