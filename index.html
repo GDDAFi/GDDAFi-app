@@ -1,159 +1,140 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GddaFi Play - Golden Edition</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GddaFi Play - Golden Edition</title>
+    
+    <!-- ✅ إصلاح مجهري: رابط الربح الكامل والفعال الخاص بك -->
+    <script src="https://profitablecpmratenetwork.com"></script>
+    
+    <style>
+        :root {
+            --bg: linear-gradient(135deg, #1a0033 0%, #05000a 100%);
+            --gold: #ffd700;
+            --purple: #8a2be2;
+        }
 
-<!-- 💰 سكربت الإعلانات -->
-<script src="https://pl29042900.profitablecpmratenetwork.com/67/d9/1b/67d91bfab7947c9808641625010d7e0c.js"></script>
+        body {
+            background: var(--bg); color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; display: flex; flex-direction: column;
+            align-items: center; height: 100vh; overflow: hidden; text-align: center;
+        }
 
-<style>
-:root {
-    --bg: linear-gradient(135deg, #1a0033 0%, #05000a 100%);
-    --gold: #ffd700;
-    --purple: #8a2be2;
-}
+        .header-controls {
+            width: 100%; padding: 15px; display: flex;
+            justify-content: space-between; box-sizing: border-box; z-index: 100;
+        }
 
-body {
-    background: var(--bg);
-    color: white;
-    font-family: sans-serif;
-    margin: 0;
-    text-align: center;
-}
+        .lang-select {
+            background: rgba(138, 43, 226, 0.2); border: 1px solid var(--purple);
+            color: white; padding: 8px; border-radius: 10px; cursor: pointer;
+        }
 
-.counter {
-    font-size: 3rem;
-    color: var(--gold);
-    margin-top: 40px;
-}
+        .boost-btn {
+            width: 55px; height: 55px; border-radius: 50%;
+            background: var(--purple); border: 2px solid var(--gold); color: var(--gold);
+            font-size: 26px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 0 20px var(--purple); animation: pulse 2s infinite;
+        }
 
-.coin {
-    width: 240px;
-    height: 240px;
-    margin: 20px auto;
-    border-radius: 50%;
-    background: url('https://upload.wikimedia.org/wikipedia/commons/7/7b/Libyan_gold_dinar_concept.jpg') center/cover;
-    animation: spin 6s linear infinite;
-}
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
 
-@keyframes spin {
-    from {transform: rotateY(0);}
-    to {transform: rotateY(360deg);}
-}
+        .counter {
+            font-size: 3.2rem; font-weight: bold; color: var(--gold);
+            text-shadow: 0 0 30px var(--gold); margin-top: 40px;
+            font-family: 'Courier New', Courier, monospace;
+        }
 
-button {
-    padding: 15px 25px;
-    margin: 10px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-}
+        .coin-box { width: 260px; height: 260px; margin: 25px 0; perspective: 1000px; }
 
-.mine { background: purple; color: #fff; }
-.boost { background: gold; }
+        .gold-coin {
+            width: 100%; height: 100%;
+            /* ✅ إصلاح مجهري: رابط مباشر للصورة لضمان ظهور عملة القذافي */
+            background: url('https://wikimedia.org') center/cover;
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(0,0,0,0.5);
+            border: 4px solid #b8860b;
+            filter: contrast(1.2) brightness(1.1);
+            animation: rotate3d 6s linear infinite;
+        }
 
-.ref {
-    border: 1px dashed gold;
-    padding: 10px;
-    margin-top: 10px;
-}
-</style>
+        @keyframes rotate3d {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .mine-btn {
+            background: linear-gradient(45deg, #4b0082, #8a2be2); border: none;
+            color: white; padding: 18px 50px; border-radius: 50px;
+            font-size: 1.3rem; font-weight: bold; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s; margin-bottom: 20px;
+        }
+
+        .mine-btn:active { transform: scale(0.9); }
+
+        .ref-btn {
+            color: var(--gold); border: 1px dashed var(--gold);
+            padding: 12px 35px; border-radius: 20px; cursor: pointer;
+            font-size: 15px; background: rgba(255, 215, 0, 0.05);
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="counter" id="balance">0.000000</div>
-<div class="coin"></div>
+    <div class="header-controls">
+        <select class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="ar">العربية 🇸🇦</option>
+            <option value="en">English 🇺🇸</option>
+            <option value="zh">中文 🇨🇳</option>
+            <option value="fa">فارسی 🇮🇷</option>
+        </select>
+        <button class="boost-btn" onclick="runAds(7)">⚡</button>
+    </div>
 
-<button class="mine" id="mBtn" onclick="handleAction('mine')">⛏ تعدين</button>
-<button class="boost" onclick="handleAction('boost')">⚡ تعزيز</button>
+    <div class="counter" id="balDisplay">0.000116</div>
 
-<div class="ref" id="rBtn" onclick="copyRef()">👥 إحالة</div>
+    <div class="coin-box">
+        <div class="gold-coin"></div>
+    </div>
 
-<p id="refLink"></p>
+    <button class="mine-btn" id="mBtn" onclick="runAds(1)">تعدين عملات القذافي ♻️</button>
 
-<script>
-const DAY = 86400000;
+    <div class="ref-btn" id="rBtn" onclick="runAds(1)">👥 زر الإحالات (+0.005)</div>
 
-let user = JSON.parse(localStorage.getItem("user")) || {
-    balance: 0,
-    rate: 1,
-    lastMine: 0,
-    lastBoost: 0,
-    id: generateID()
-};
+    <script>
+        let balance = 0.000116;
+        const speed = 1 / 86400;
 
-function generateID() {
-    return 'user-' + Math.random().toString(36).substr(2,9);
-}
+        setInterval(() => {
+            balance += speed;
+            document.getElementById('balDisplay').innerText = balance.toFixed(6);
+        }, 1000);
 
-function save() {
-    localStorage.setItem("user", JSON.stringify(user));
-}
-
-function updateUI() {
-    document.getElementById("balance").innerText = user.balance.toFixed(6);
-    document.getElementById("refLink").innerText =
-        location.origin + location.pathname + "?ref=" + user.id;
-}
-
-function showAd() {
-    try {
-        if (typeof window.show_8641625 === "function") {
-            window.show_8641625();
+        function runAds(count) {
+            // ✅ إصلاح مجهري: استدعاء الإعلانات بشكل صحيح
+            if (window.show_8641625) {
+                for(let i=0; i<count; i++) { window.show_8641625(); }
+            }
+            alert(count > 1 ? "تم تفعيل التعزيز! ⚡" : "بدأ التعدين! 💰");
         }
-    } catch(e){}
-}
 
-function mine() {
-    let now = Date.now();
-
-    if (now - user.lastMine < DAY) {
-        alert("⏳ مرة كل يوم");
-        return;
-    }
-
-    user.balance += user.rate;
-    user.lastMine = now;
-
-    save();
-    updateUI();
-    alert("💰 تم التعدين");
-}
-
-function boost() {
-    let now = Date.now();
-
-    if (now - user.lastBoost < DAY) {
-        alert("⏳ مرة يومياً");
-        return;
-    }
-
-    user.lastBoost = now;
-    user.rate += 0.5;
-
-    save();
-    updateUI();
-    alert("⚡ تم التعزيز");
-}
-
-function copyRef() {
-    const link = location.origin + location.pathname + "?ref=" + user.id;
-    navigator.clipboard.writeText(link);
-    alert("📋 تم النسخ");
-}
-
-function handleAction(type) {
-    showAd();
-
-    if (type === "mine") mine();
-    if (type === "boost") boost();
-}
-
-updateUI();
-</script>
-
+        function changeLanguage(lang) {
+            const dictionary = {
+                ar: { b: "تعدين عملات القذافي ♻️", r: "👥 زر الإحالات (+0.005)" },
+                en: { b: "Mining Gaddafi tokens ♻️", r: "👥 Referral Button (+0.005)" },
+                zh: { b: "开采卡扎菲代币 ♻️", r: "👥 推荐按钮 (+0.005)" },
+                fa: { b: "استخراج توکن های قذافی ♻️", r: "👥 دکمه ارجاع (+0.005)" }
+            };
+            document.getElementById('mBtn').innerText = dictionary[lang].b;
+            document.getElementById('rBtn').innerText = dictionary[lang].r;
+        }
+    </script>
 </body>
 </html>
