@@ -3,74 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Play - Final Pro</title>
+    <title>GddaFi Play - Crypto Pro</title>
     
-    <!-- ✅ كود الربح Adsterra -->
+    <!-- ✅ كود أرباح Adsterra الخاص بك -->
     <script src="https://profitablecpmratenetwork.com"></script>
 
     <style>
-        :root { --gold: #ffd700; --royal: #b8860b; }
+        :root { --gold: #ffd700; --royal: #b8860b; --glow: rgba(255, 215, 0, 0.5); }
+        
         body { 
-            background: #05000a; color: white; font-family: 'Segoe UI', sans-serif; 
+            background: #05000a; color: white; font-family: 'Orbitron', 'Segoe UI', sans-serif; 
             margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;
             height: 100vh; width: 100vw; overflow: hidden;
             border: 6px double var(--royal); box-sizing: border-box;
         }
-        .header { width: 100%; display: flex; justify-content: space-between; padding: 20px 15px; box-sizing: border-box; align-items: center; }
-        .wallet-btn { 
-            background: linear-gradient(145deg, #333, #000); border: 1.5px solid var(--gold);
-            color: var(--gold); padding: 8px 15px; border-radius: 12px; cursor: pointer;
-            display: flex; align-items: center; gap: 8px; font-weight: bold;
-        }
-        .lang-select { background: #1a0033; color: white; border: 1px solid var(--gold); border-radius: 8px; padding: 5px; }
-        .counter { font-size: 3.8rem; color: var(--gold); margin: 10px 0; font-weight: bold; text-shadow: 0 0 20px gold; }
-        .coin-box { width: 220px; height: 220px; margin: 10px auto; position: relative; }
+
+        .header { width: 100%; display: flex; justify-content: space-between; padding: 15px; box-sizing: border-box; z-index: 10; }
+        
+        .wallet-card { background: linear-gradient(135deg, #111, #222); border: 1px solid var(--gold); padding: 8px 15px; border-radius: 12px; color: var(--gold); font-weight: bold; cursor: pointer; box-shadow: 0 0 10px var(--glow); font-size: 14px; }
+
+        .counter-container { margin: 10px 0; text-align: center; }
+        .counter { font-size: 4.2rem; color: var(--gold); font-weight: 900; text-shadow: 0 0 30px var(--gold); }
+        .currency-name { font-size: 1.2rem; color: #aaa; margin-top: -10px; letter-spacing: 2px; }
+
+        .coin-box { width: 230px; height: 230px; margin: 15px auto; position: relative; cursor: pointer; transition: 0.1s; }
         .gold-coin { 
             width: 100%; height: 100%; border-radius: 50%; 
             background: url('coin.png') center/cover no-repeat; 
-            border: 4px solid var(--royal); box-shadow: 0 0 30px #8a2be2;
+            border: 5px solid var(--royal); box-shadow: 0 0 40px rgba(138, 43, 226, 0.4);
             animation: rotateY 12s linear infinite;
         }
         @keyframes rotateY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-        .btn-group { display: flex; flex-direction: column; gap: 12px; width: 90%; max-width: 400px; }
-        .main-btn { 
-            background: linear-gradient(45deg, #3a006f, #8a2be2); 
-            border: 2px solid var(--gold); color: white; padding: 16px; 
-            border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer;
+        .coin-box:active { transform: scale(0.92); }
+
+        /* ✅ نص COIN GDDAFI الفخم تحت الصورة */
+        .fakhama-text { 
+            font-size: 1.5rem; font-weight: bold; margin: 10px 0;
+            background: linear-gradient(to bottom, #ffd700, #b8860b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5); letter-spacing: 3px;
         }
-        .sub-text { font-size: 0.85rem; color: #ccc; margin-top: -10px; }
+
+        .btn-group { display: flex; flex-direction: column; gap: 12px; width: 90%; max-width: 400px; padding: 10px; }
+        .main-btn { 
+            background: linear-gradient(45deg, #2e004f, #8a2be2); 
+            border: 2px solid var(--gold); color: white; padding: 16px; 
+            border-radius: 40px; font-size: 1.2rem; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+        }
+        .main-btn::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: rgba(255,255,255,0.1); transform: rotate(45deg); transition: 0.3s; }
+        
+        .sub-text { font-size: 0.8rem; color: #ccc; margin-top: -10px; }
+
+        /* ✅ شريط التنقل السفلي (Crypto Style) */
+        .nav-bar { 
+            position: fixed; bottom: 15px; width: 90%; background: rgba(20, 0, 40, 0.9); 
+            border: 1px solid var(--gold); border-radius: 20px; display: flex; 
+            justify-content: space-around; padding: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+        .nav-item { color: #888; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-item.active { color: var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="wallet-btn" onclick="triggerAd(); alert(t[cur].wMsg)">
-        <span>🏦</span> <span id="wBtn">Wallet</span>
+    <div class="wallet-card" onclick="adClick(); alert(t[cur].wMsg)">
+        🏦 <span id="wBtn">Wallet</span>
     </div>
-    <select class="lang-select" id="lang" onchange="changeLang()">
+    <select class="lang-select" id="lang" onchange="changeLang()" style="background:#1a0033; color:white; border:1px solid gold; border-radius:8px; padding:5px;">
         <option value="ar">العربية 🇸🇦</option>
         <option value="en">English 🇺🇸</option>
     </select>
 </div>
 
-<div class="counter" id="bal">0.000</div>
-
-<div class="coin-box">
-    <div class="gold-coin" onclick="triggerAd()"></div>
+<div class="counter-container">
+    <div class="counter" id="bal">0.000</div>
+    <div class="currency-name">GDAFi TOKENS</div>
 </div>
+
+<div class="coin-box" onclick="handleTap()">
+    <div class="gold-coin"></div>
+</div>
+
+<!-- ✅ نص COIN GDDAFI الفخم -->
+<div class="fakhama-text">COIN GDDAFI</div>
 
 <div class="btn-group">
     <button class="main-btn" id="mBtn" onclick="doMine()">تعدين رئيسي</button>
     <p class="sub-text" id="mSub">+1 عملة كل 24 ساعة</p>
     
-    <button class="main-btn" id="bBtn" onclick="doBoost()">تعزيز (<span id="bLeft">7</span>/7)</button>
-    <p class="sub-text" id="bSub">0.005 لكل تعزيز</p>
+    <button class="main-btn" id="bBtn" onclick="doBoost()">Boost (<span id="bLeft">7</span>/7)</button>
+    <p class="sub-text" id="bSub">0.005 per boost</p>
     
     <button class="main-btn" id="iBtn" onclick="doInvite()">إحالة صديق</button>
 </div>
 
+<div class="nav-bar">
+    <div class="nav-item active">🏠 <span>Home</span></div>
+    <div class="nav-item" onclick="alert('Soon')">⛏️ <span>Mine</span></div>
+    <div class="nav-item" onclick="alert('Soon')">📋 <span>Tasks</span></div>
+    <div class="nav-item" onclick="doInvite()">👥 <span>Friends</span></div>
+</div>
+
 <script>
-    function triggerAd() { console.log("Ads On"); }
+    function adClick() { console.log("Ad Triggered"); }
 
     const t = {
         ar: { w: "المحفظة", wMsg: "السحب قريبآ ⏳", m: "تعدين رئيسي", mSub: "+1 عملة كل 24 ساعة", b: "تعزيز", i: "إحالة صديق", s: "تم بنجاح!", l: "انتظر 24 ساعة" },
@@ -78,7 +115,7 @@
     };
 
     let cur = localStorage.getItem('lang') || 'ar';
-    let balance = parseFloat(localStorage.getItem('bal')) || 1.105;
+    let balance = parseFloat(localStorage.getItem('bal')) || 1.175;
     let lastM = parseInt(localStorage.getItem('lastM')) || 0;
     let bCount = parseInt(localStorage.getItem('bCount')) || 7;
     let lastBReset = parseInt(localStorage.getItem('lastB')) || Date.now();
@@ -86,10 +123,10 @@
     function changeLang() {
         cur = document.getElementById('lang').value;
         localStorage.setItem('lang', cur);
-        render();
+        updateUI();
     }
 
-    function render() {
+    function updateUI() {
         document.getElementById('wBtn').innerText = t[cur].w;
         document.getElementById('mBtn').innerText = t[cur].m;
         document.getElementById('mSub').innerText = t[cur].mSub;
@@ -97,33 +134,44 @@
         document.getElementById('bal').innerText = balance.toFixed(3);
         document.getElementById('bLeft').innerText = bCount;
         
-        // تصفير التعزيزات كل 24 ساعة
-        if (Date.now() - lastBReset > 86400000) {
-            bCount = 7; lastBReset = Date.now(); save();
-        }
+        if (Date.now() - lastBReset > 86400000) { bCount = 7; lastBReset = Date.now(); save(); }
     }
 
+    // ✅ عداد التعدين بزيادة سلسة (Animation)
     function doMine() {
-        triggerAd();
+        adClick();
         if (Date.now() - lastM > 86400000) {
-            balance += 1; lastM = Date.now(); save(); alert(t[cur].s); render();
+            let target = balance + 1;
+            let interval = setInterval(() => {
+                balance += 0.01;
+                document.getElementById('bal').innerText = balance.toFixed(3);
+                if (balance >= target) {
+                    balance = target;
+                    clearInterval(interval);
+                    lastM = Date.now();
+                    save();
+                    alert(t[cur].s);
+                    updateUI();
+                }
+            }, 10);
         } else { alert(t[cur].l); }
     }
 
     function doBoost() {
-        triggerAd();
+        adClick();
         if (bCount > 0) {
-            balance += 0.005; bCount--; save(); render();
+            balance += 0.005; bCount--; save(); updateUI();
         } else { alert(t[cur].l); }
     }
 
-    // ✅ الحل النهائي لزر الإحالة (بدون window.open لضمان عدم حدوث خطأ)
+    // ✅ الحل النهائي لزر الإحالة (رابط مباشر)
     function doInvite() {
-        triggerAd();
-        const shareLink = "https://t.me" + encodeURIComponent("https://t.me") + "&text=" + encodeURIComponent("ابدأ تعدين عملة القذافي واربح معي! 💰");
-        // التوجيه المباشر داخل نفس النافذة
+        adClick();
+        const shareLink = "https://t.me" + encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
         window.location.href = shareLink;
     }
+
+    function handleTap() { adClick(); }
 
     function save() {
         localStorage.setItem('bal', balance);
@@ -133,7 +181,7 @@
     }
 
     document.getElementById('lang').value = cur;
-    render();
+    updateUI();
 </script>
 </body>
 </html>
