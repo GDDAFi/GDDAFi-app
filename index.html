@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Play - Ultra Royal</title>
+    <title>GddaFi Play - Final Pro</title>
     
-    <!-- ✅ كود الربح Adsterra الخاص بك (يعمل على الصفحة كاملة) -->
+    <!-- ✅ كود الربح Adsterra -->
     <script src="https://profitablecpmratenetwork.com"></script>
 
     <style>
         :root { --gold: #ffd700; --royal: #b8860b; }
         body { 
             background: #05000a; color: white; font-family: 'Segoe UI', sans-serif; 
-            margin: 0; display: flex; flex-direction: column; align-items: center;
+            margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;
             height: 100vh; width: 100vw; overflow: hidden;
             border: 6px double var(--royal); box-sizing: border-box;
         }
@@ -20,16 +20,16 @@
         .wallet-btn { 
             background: linear-gradient(145deg, #333, #000); border: 1.5px solid var(--gold);
             color: var(--gold); padding: 8px 15px; border-radius: 12px; cursor: pointer;
-            display: flex; align-items: center; gap: 8px; font-weight: bold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            display: flex; align-items: center; gap: 8px; font-weight: bold;
         }
         .lang-select { background: #1a0033; color: white; border: 1px solid var(--gold); border-radius: 8px; padding: 5px; }
-        .counter { font-size: 4rem; color: var(--gold); margin: 10px 0; font-weight: bold; text-shadow: 0 0 20px gold; }
-        .coin-box { width: 220px; height: 220px; margin: 10px auto; }
+        .counter { font-size: 3.8rem; color: var(--gold); margin: 10px 0; font-weight: bold; text-shadow: 0 0 20px gold; }
+        .coin-box { width: 220px; height: 220px; margin: 10px auto; position: relative; }
         .gold-coin { 
             width: 100%; height: 100%; border-radius: 50%; 
             background: url('coin.png') center/cover no-repeat; 
             border: 4px solid var(--royal); box-shadow: 0 0 30px #8a2be2;
-            animation: rotateY 15s linear infinite;
+            animation: rotateY 12s linear infinite;
         }
         @keyframes rotateY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
         .btn-group { display: flex; flex-direction: column; gap: 12px; width: 90%; max-width: 400px; }
@@ -44,7 +44,7 @@
 <body>
 
 <div class="header">
-    <div class="wallet-btn" onclick="callAd(); alert(t[cur].wMsg)">
+    <div class="wallet-btn" onclick="triggerAd(); alert(t[cur].wMsg)">
         <span>🏦</span> <span id="wBtn">Wallet</span>
     </div>
     <select class="lang-select" id="lang" onchange="changeLang()">
@@ -56,22 +56,21 @@
 <div class="counter" id="bal">0.000</div>
 
 <div class="coin-box">
-    <div class="gold-coin" onclick="callAd()"></div>
+    <div class="gold-coin" onclick="triggerAd()"></div>
 </div>
 
 <div class="btn-group">
-    <button class="main-btn" id="mBtn" onclick="doMine()">Main Mine</button>
-    <p class="sub-text" id="mSub">+1 coin every 24h</p>
+    <button class="main-btn" id="mBtn" onclick="doMine()">تعدين رئيسي</button>
+    <p class="sub-text" id="mSub">+1 عملة كل 24 ساعة</p>
     
-    <button class="main-btn" id="bBtn" onclick="doBoost()">Boost (<span id="bLeft">7</span>/7)</button>
-    <p class="sub-text" id="bSub">0.005 per boost</p>
+    <button class="main-btn" id="bBtn" onclick="doBoost()">تعزيز (<span id="bLeft">7</span>/7)</button>
+    <p class="sub-text" id="bSub">0.005 لكل تعزيز</p>
     
-    <button class="main-btn" id="iBtn" onclick="doInvite()">Invite Friend</button>
+    <button class="main-btn" id="iBtn" onclick="doInvite()">إحالة صديق</button>
 </div>
 
 <script>
-    // ✅ وظيفة الإعلان الإجبارية عند كل نقرة
-    function callAd() { console.log("Ad Clicked"); }
+    function triggerAd() { console.log("Ads On"); }
 
     const t = {
         ar: { w: "المحفظة", wMsg: "السحب قريبآ ⏳", m: "تعدين رئيسي", mSub: "+1 عملة كل 24 ساعة", b: "تعزيز", i: "إحالة صديق", s: "تم بنجاح!", l: "انتظر 24 ساعة" },
@@ -82,15 +81,15 @@
     let balance = parseFloat(localStorage.getItem('bal')) || 1.105;
     let lastM = parseInt(localStorage.getItem('lastM')) || 0;
     let bCount = parseInt(localStorage.getItem('bCount')) || 7;
-    let lastBReset = parseInt(localStorage.getItem('lastBReset')) || 0;
+    let lastBReset = parseInt(localStorage.getItem('lastB')) || Date.now();
 
     function changeLang() {
         cur = document.getElementById('lang').value;
         localStorage.setItem('lang', cur);
-        renderUI();
+        render();
     }
 
-    function renderUI() {
+    function render() {
         document.getElementById('wBtn').innerText = t[cur].w;
         document.getElementById('mBtn').innerText = t[cur].m;
         document.getElementById('mSub').innerText = t[cur].mSub;
@@ -98,47 +97,43 @@
         document.getElementById('bal').innerText = balance.toFixed(3);
         document.getElementById('bLeft').innerText = bCount;
         
-        // إعادة ضبط التعزيزات كل 24 ساعة
+        // تصفير التعزيزات كل 24 ساعة
         if (Date.now() - lastBReset > 86400000) {
-            bCount = 7;
-            lastBReset = Date.now();
-            save();
+            bCount = 7; lastBReset = Date.now(); save();
         }
     }
 
     function doMine() {
-        callAd();
+        triggerAd();
         if (Date.now() - lastM > 86400000) {
-            balance += 1; lastM = Date.now(); save(); alert(t[cur].s); renderUI();
+            balance += 1; lastM = Date.now(); save(); alert(t[cur].s); render();
         } else { alert(t[cur].l); }
     }
 
     function doBoost() {
-        callAd();
+        triggerAd();
         if (bCount > 0) {
-            balance += 0.005; bCount--; save(); renderUI();
+            balance += 0.005; bCount--; save(); render();
         } else { alert(t[cur].l); }
     }
 
-    // ✅ الحل النهائي لزر الإحالة (يعمل 100% داخل تليجرام)
+    // ✅ الحل النهائي لزر الإحالة (بدون window.open لضمان عدم حدوث خطأ)
     function doInvite() {
-        callAd();
-        const botUser = "GddaFiPlay_bot";
-        const text = encodeURIComponent("ابدأ تعدين عملة القذافي واربح معي! 💰");
-        const url = "https://t.me" + botUser;
-        // استخدام الرابط المباشر للمشاركة
-        window.location.href = `https://t.meshare/url?url=${url}&text=${text}`;
+        triggerAd();
+        const shareLink = "https://t.me" + encodeURIComponent("https://t.me") + "&text=" + encodeURIComponent("ابدأ تعدين عملة القذافي واربح معي! 💰");
+        // التوجيه المباشر داخل نفس النافذة
+        window.location.href = shareLink;
     }
 
     function save() {
         localStorage.setItem('bal', balance);
         localStorage.setItem('lastM', lastM);
         localStorage.setItem('bCount', bCount);
-        localStorage.setItem('lastBReset', lastBReset);
+        localStorage.setItem('lastB', lastBReset);
     }
 
     document.getElementById('lang').value = cur;
-    renderUI();
+    render();
 </script>
 </body>
 </html>
