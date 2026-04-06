@@ -3,80 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Play - Pro</title>
-    
-    <!-- ✅ مكتبة تليجرام الرسمية (ضرورية لعمل الأزرار) -->
-    <script src="https://telegram.org"></script>
+    <title>GddaFi Play - Crypto Pro</title>
     
     <!-- ✅ كود أرباح Adsterra الخاص بك -->
     <script src="https://profitablecpmratenetwork.com"></script>
+    <!-- ✅ مكتبة تليجرام الرسمية -->
+    <script src="https://telegram.org"></script>
 
     <style>
-        :root { --gold: #ffd700; --royal: #b8860b; --accent: #8a2be2; }
+        :root { --gold: #ffd700; --royal: #b8860b; --glass: rgba(255, 255, 255, 0.1); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
         
         body { 
             background: #05000a; color: white; font-family: 'Segoe UI', sans-serif; 
             margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;
             height: 100vh; width: 100vw; overflow: hidden; 
-            /* ✅ إطار واجهة احترافي يواكب زوايا الهاتف */
-            border: 2px solid var(--royal); border-radius: 15px; 
-            box-shadow: inset 0 0 20px rgba(184, 134, 11, 0.4);
+            /* ✅ إطار الواجهة الاحترافي الشامل */
+            border: 1.5px solid var(--royal); border-radius: 15px;
+            box-shadow: inset 0 0 20px rgba(184, 134, 11, 0.5);
             box-sizing: border-box; touch-action: manipulation;
         }
 
-        .header { width: 100%; display: flex; justify-content: space-between; padding: 10px 15px; align-items: center; box-sizing: border-box; }
-        .wallet-btn { background: rgba(255, 215, 0, 0.05); border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .header { width: 100%; display: flex; justify-content: space-between; padding: 12px 15px; align-items: center; }
+        .wallet-btn { background: #111; border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: bold; }
 
-        .counter-box { margin-top: 5px; text-align: center; }
-        .counter { font-size: 2.8rem; color: var(--gold); font-weight: 800; text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); line-height: 1; }
-        .currency { font-size: 0.75rem; color: #666; letter-spacing: 2px; margin-top: 5px; font-weight: bold; }
+        .counter-box { margin-top: 10px; text-align: center; }
+        .counter { font-size: 3rem; color: var(--gold); font-weight: 800; text-shadow: 0 0 20px gold; line-height: 1; }
+        .currency { font-size: 0.75rem; color: #777; letter-spacing: 2px; margin-top: 5px; }
 
-        /* ✅ هالة ضوئية ناعمة وفخمة للعملة */
         .coin-aura {
-            width: 190px; height: 190px;
-            margin: 15px auto;
-            position: relative;
+            width: 190px; height: 190px; margin: 15px auto;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
-            box-shadow: 0 0 35px rgba(255, 215, 0, 0.05);
+            border-radius: 50%; background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
         }
         .gold-coin { 
-            width: 165px; height: 165px; border-radius: 50%; 
+            width: 170px; height: 170px; border-radius: 50%; 
             background: url('coin.png') center/cover no-repeat; 
-            border: 1px solid var(--gold);
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.2));
-            animation: rotateY 15s linear infinite;
-            cursor: pointer;
+            border: 1.5px solid var(--gold); animation: rotateY 15s linear infinite; cursor: pointer;
         }
         @keyframes rotateY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 
-        .fakhama-title { 
-            font-size: 1rem; font-weight: bold; color: var(--gold); margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5); letter-spacing: 3px;
-        }
+        .fakhama-title { font-size: 1.1rem; font-weight: bold; color: var(--gold); margin-bottom: 10px; letter-spacing: 3px; }
 
-        /* ✅ أزرار مصغرة وأنيقة جداً */
-        .btn-list { display: flex; flex-direction: column; gap: 10px; width: 75%; }
+        .btn-list { display: flex; flex-direction: column; gap: 10px; width: 85%; }
         .action-btn { 
-            background: linear-gradient(135deg, #1a0033, #330066); 
-            border: 1px solid var(--gold);
-            color: white; padding: 8px; border-radius: 20px; 
-            font-weight: 600; cursor: pointer; font-size: 0.9rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
-            transition: 0.2s;
+            background: linear-gradient(135deg, #1a0033, #330066); border: 1px solid var(--gold);
+            color: white; padding: 12px; border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .action-btn:active { transform: scale(0.97); background: var(--accent); }
+        .action-btn:active { transform: scale(0.96); opacity: 0.9; }
 
-        .hint-text { font-size: 0.6rem; color: #777; margin-top: -6px; text-align: center; }
-
+        /* ✅ الأزرار السفلية المبلورة (الكبسولات) */
         .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; height: 50px; 
-            background: rgba(5, 0, 10, 0.98); 
-            border-top: 0.5px solid var(--royal); display: flex; justify-content: space-around; align-items: center;
+            position: fixed; bottom: 15px; width: 92%; height: 60px; 
+            display: flex; justify-content: space-around; align-items: center;
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px);
+            border-radius: 40px; border: 0.5px solid rgba(184, 134, 11, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
-        .nav-link { color: #444; font-size: 0.55rem; display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; }
-        .nav-link.active { color: var(--gold); font-weight: bold; }
+        .nav-link { 
+            color: #555; font-size: 0.6rem; display: flex; flex-direction: column; align-items: center; 
+            gap: 2px; cursor: pointer; transition: 0.3s; padding: 8px 12px; border-radius: 20px;
+        }
+        .nav-link.active { 
+            color: var(--gold); background: rgba(255, 215, 0, 0.1); 
+            box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.2); 
+        }
+        .nav-link b { font-size: 18px; display: block; }
     </style>
 </head>
 <body>
@@ -104,7 +97,7 @@
 
 <div class="btn-list">
     <button class="action-btn" id="mBtn" onclick="startMining()">تعدين رئيسي</button>
-    <p class="hint-text" id="mStatus">+1 عملة كل 24 ساعة</p>
+    <p class="hint-text" id="mStatus" style="text-align:center; font-size:0.65rem; color:#888; margin-top:-5px;">+1 عملة كل 24 ساعة</p>
     
     <button class="action-btn" id="boostBtn" onclick="doBoost()">تعزيز (<span id="bLeft">7</span>/7)</button>
     
@@ -112,14 +105,16 @@
 </div>
 
 <div class="bottom-nav">
-    <div class="nav-link active"><span>🏠</span> <small id="nav-home">الرئيسية</small></div>
-    <div class="nav-link" onclick="tg.showAlert('Soon')"><span>⛏️</span> <small id="nav-mine">تعدين</small></div>
-    <div class="nav-link" onclick="tg.showAlert('Soon')"><span>📋</span> <small id="nav-tasks">مهام</small></div>
-    <div class="nav-link" onclick="doInviteFriends()"><span>👥</span> <small id="nav-friends">أصدقاء</small></div>
+    <div class="nav-link active"><b>🏠</b> <span id="nav-home">الرئيسية</span></div>
+    <div class="nav-link" onclick="tg.showAlert('Soon')"><b>⛏️</b> <span id="nav-mine">تعدين</span></div>
+    <div class="nav-link" onclick="tg.showAlert('Soon')"><b>📋</b> <span id="nav-tasks">مهام</span></div>
+    <div class="nav-link" onclick="doInviteFriends()"><b>👥</b> <span id="nav-friends">أصدقاء</span></div>
 </div>
 
 <script>
+    // ✅ تهيئة تليجرام أولاً لضمان عدم تعطل الأزرار
     const tg = window.Telegram.WebApp;
+    tg.ready();
     tg.expand();
 
     let balance = parseFloat(localStorage.getItem('g_bal')) || 0.000000;
@@ -149,7 +144,7 @@
 
     function manualTap() { 
         balance += 0.0001; 
-        tg.HapticFeedback.impactOccurred('light'); // اهتزاز خفيف عند النقر
+        tg.HapticFeedback.impactOccurred('light');
         updateUI(); 
         save(); 
     }
@@ -158,7 +153,7 @@
         if(!isMining) { 
             isMining = true; 
             localStorage.setItem('g_mining', 'true'); 
-            tg.showAlert("Mining Started! 🚀"); 
+            tg.showConfirm("هل تريد بدء التعدين السحابي؟"); 
         }
     }
 
@@ -169,16 +164,13 @@
             tg.HapticFeedback.impactOccurred('medium');
             updateUI(); 
             save(); 
-        } else { tg.showAlert("No boosts left!"); }
+        } else { tg.showAlert("نفذت التعزيزات المتاحة!"); }
     }
 
-    // ✅ تصحيح زر الإحالة النهائي ليعمل داخل تليجرام حصراً
     function doInviteFriends() {
         const botUser = "GddaFiPlay_bot";
-        const shareText = encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
-        const shareUrl = `https://t.me{botUser}?start=user&text=${shareText}`;
-        
-        // استخدام مكتبة تليجرام لفتح الرابط
+        const shareMsg = encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
+        const shareUrl = `https://t.me{botUser}?start=user&text=${shareMsg}`;
         tg.openTelegramLink(shareUrl);
     }
 
