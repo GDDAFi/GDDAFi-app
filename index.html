@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GddaFi Play - Fixed Pro</title>
-    <!-- ✅ مكتبة تليجرام الرسمية - ضرورية جداً -->
+    <!-- ✅ مكتبة تليجرام الرسمية -->
     <script src="https://telegram.org"></script>
     <!-- ✅ كود أرباح Adsterra - سيعمل مع كل نقرة -->
     <script src="https://profitablecpmratenetwork.com"></script>
@@ -28,8 +28,8 @@
 <body>
 
 <div class="header">
-    <button class="wallet-btn" onclick="ad(); alert(L[C].wMsg)">🏦 <span id="wTxt">المحفظة</span></button>
-    <select id="lSel" onchange="setL(this.value)" style="background:#000; color:gold; border:1px solid gold; font-size:12px; border-radius:5px;">
+    <button class="wallet-btn" onclick="runAd(); alert(LANGS[CUR].wMsg)">🏦 <span id="wTxt">المحفظة</span></button>
+    <select id="lSel" onchange="setL(this.value)" style="background:#000; color:gold; border:1px solid gold; font-size:12px; border-radius:5px; padding:3px;">
         <option value="ar">العربية 🇸🇦</option>
         <option value="en">English 🇺🇸</option>
         <option value="zh">中文 🇨🇳</option>
@@ -40,88 +40,107 @@
 <div class="counter" id="bal">0.000000</div>
 <div class="currency">GDAFi TOKENS</div>
 
-<div class="coin-box"><div class="gold-coin" onclick="ad()"></div></div>
+<div class="coin-box"><div class="gold-coin" onclick="runAd()"></div></div>
 <div class="fakhama">COIN GDDAFI</div>
 
 <div class="btn-list">
-    <button class="action-btn" id="mBtn" onclick="runM()">تعدين رئيسي</button>
+    <button class="action-btn" id="mBtn" onclick="mine()">تعدين رئيسي</button>
     <p class="hint" id="mHint">+1 عملة كل 24 ساعة</p>
-    <button class="action-btn" id="bBtn" onclick="runB()">تعزيز (7/7)</button>
+    <button class="action-btn" id="bBtn" onclick="boost()">تعزيز (7/7)</button>
     <p class="hint" id="bHint">0.005 لكل تعزيز</p>
-    <button class="action-btn" id="iBtn" onclick="runI()">إحالة صديق (+0.005)</button>
+    <button class="action-btn" id="iBtn" onclick="invite()">إحالة صديق (+0.005)</button>
 </div>
 
 <div class="nav-bar">
     <div style="color:gold; font-size:0.6rem;" id="nH">🏠 الرئيسية</div>
-    <div style="color:#555; font-size:0.6rem;" onclick="alert('Soon')" id="nM">⛏️ تعدين</div>
-    <div style="color:#555; font-size:0.6rem;" onclick="alert('Soon')" id="nT">📋 مهام</div>
-    <div style="color:#555; font-size:0.6rem;" onclick="runI()" id="nF">👥 أصدقاء</div>
+    <div style="color:#555; font-size:0.6rem;" id="nM">⛏️ تعدين</div>
+    <div style="color:#555; font-size:0.6rem;" id="nT">📋 مهام</div>
+    <div style="color:#555; font-size:0.6rem;" onclick="invite()" id="nF">👥 أصدقاء</div>
 </div>
 
 <script>
+    // ✅ تهيئة تليجرام
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    const L = {
+    const LANGS = {
         ar: { w: "المحفظة", wMsg: "السحب قريبآ ⏳", m: "تعدين رئيسي", mS: "جاري التعدين... ⛏️", mH: "+1 عملة كل 24 ساعة", b: "تعزيز", bH: "0.005 لكل تعزيز", i: "إحالة صديق (+0.005)", nH: "🏠 الرئيسية", nM: "⛏️ تعدين", nT: "📋 مهام", nF: "👥 أصدقاء" },
         en: { w: "Wallet", wMsg: "Withdrawal soon ⏳", m: "Main Mine", mS: "Mining... ⛏️", mH: "+1 coin every 24h", b: "Boost", bH: "0.005 per boost", i: "Invite Friend (+0.005)", nH: "🏠 Home", nM: "⛏️ Mine", nT: "📋 Tasks", nF: "👥 Friends" },
         zh: { w: "钱包", wMsg: "即将提现 ⏳", m: "主挖掘", mS: "挖掘中... ⛏️", mH: "每24小时+1币", b: "加速", bH: "每次+0.005", i: "邀请朋友 (+0.005)", nH: "🏠 首页", nM: "⛏️ 挖掘", nT: "📋 任务", nF: "👥 朋友" },
-        fa: { w: "کیف پول", wMsg: "برداشت به زودی ⏳", m: "استخراج اصلی", mS: "در حال استخراج... ⛏️", mH: "+1 سکه هر 24 ساعت", b: "تقویت", bS: "0.005 برای هر تقویت", i: "ارجاع دوستان (+0.005)", nH: "🏠 خانه", nM: "⛏️ استخراج", nT: "📋 وظایف", nF: "👥 دوستان" }
+        fa: { w: "کیف پول", wMsg: "برداشت به زودی ⏳", m: "استخراج اصلی", mS: "در حال استخراج... ⛏️", mH: "+1 سکه هر 24 ساعت", b: "تقویت", bH: "0.005 برای هر تقویت", i: "ارجاع دوستان (+0.005)", nH: "🏠 خانه", nM: "⛏️ استخراج", nT: "📋 وظایف", nF: "👥 دوستان" }
     };
 
-    let C = localStorage.getItem('g_l') || 'ar';
+    // ✅ استعادة البيانات بأمان لمنع خطأ NaN
+    let CUR = localStorage.getItem('g_l') || 'ar';
     let balance = parseFloat(localStorage.getItem('g_b')) || 0.000000;
-    let isM = localStorage.getItem('g_im') === 'true';
-    let mStart = parseInt(localStorage.getItem('g_ms')) || 0;
-    let bL = parseInt(localStorage.getItem('g_bl')); if(isNaN(bL)) bL = 7;
-    let bR = parseInt(localStorage.getItem('g_br')) || Date.now();
+    let isMining = localStorage.getItem('g_im') === 'true';
+    let mineStart = parseInt(localStorage.getItem('g_ms')) || 0;
+    let bLeft = parseInt(localStorage.getItem('g_bl')); if(isNaN(bLeft)) bLeft = 7;
+    let bReset = parseInt(localStorage.getItem('g_br')) || Date.now();
 
-    function setL(v) { C = v; localStorage.setItem('g_l', v); upd(); }
-    
-    function upd() {
-        const x = L[C];
+    function setL(v) { CUR = v; localStorage.setItem('g_l', v); renderUI(); }
+
+    function renderUI() {
+        const x = LANGS[CUR];
         document.getElementById('wTxt').innerText = x.w;
-        document.getElementById('mBtn').innerText = isM ? x.mS : x.m;
+        document.getElementById('mBtn').innerText = isMining ? x.mS : x.m;
         document.getElementById('mHint').innerText = x.mH;
-        document.getElementById('bBtn').innerText = x.b + " (" + bL + "/7)";
+        document.getElementById('bBtn').innerText = x.b + " (" + bLeft + "/7)";
         document.getElementById('bHint').innerText = x.bH;
         document.getElementById('iBtn').innerText = x.i;
         document.getElementById('nH').innerText = x.nH;
         document.getElementById('nM').innerText = x.nM;
         document.getElementById('nT').innerText = x.nT;
         document.getElementById('nF').innerText = x.nF;
-        document.getElementById('lSel').value = C;
+        document.getElementById('lSel').value = CUR;
     }
 
-    function ad() { console.log("Ad Log"); }
+    function runAd() { console.log("Ad Clicked"); }
 
-    function runM() { ad(); if (!isM) { isM = true; mStart = Date.now(); save(); upd(); alert(L[C].s || "🚀"); } }
+    function mine() {
+        runAd();
+        if (!isMining) {
+            isMining = true; mineStart = Date.now(); save(); renderUI();
+            alert(CUR === 'ar' ? "بدأ التعدين! 🚀" : "Mining Started! 🚀");
+        }
+    }
 
-    function runB() { ad(); if (bL > 0) { balance += 0.005; bL--; save(); upd(); } else { alert("Wait 24h"); } }
+    function boost() {
+        runAd();
+        if (bLeft > 0) {
+            balance += 0.005; bLeft--; save(); renderUI();
+        } else { alert("Wait 24h"); }
+    }
 
-    function runI() {
-        ad();
-        const shareUrl = "https://t.me" + encodeURIComponent(C === 'ar' ? "انضم إلي في تعدين عملة القذافي واربح! 💰" : "Join me in mining GddaFi Coin! 💰");
-        if (tg.openTelegramLink) { tg.openTelegramLink(shareUrl); } else { window.location.href = shareUrl; }
+    function invite() {
+        runAd();
+        const shareLink = "https://t.me" + encodeURIComponent(CUR === 'ar' ? "انضم إلي في تعدين عملة القذافي واربح! 💰" : "Join me in mining GddaFi Coin! 💰");
+        if (tg.openTelegramLink) {
+            tg.openTelegramLink(shareLink);
+        } else {
+            window.location.href = shareLink;
+        }
     }
 
     function save() {
-        localStorage.setItem('g_b', balance); localStorage.setItem('g_im', isM);
-        localStorage.setItem('g_ms', mStart); localStorage.setItem('g_bl', bL);
-        localStorage.setItem('g_br', bR);
+        localStorage.setItem('g_b', balance); localStorage.setItem('g_im', isMining);
+        localStorage.setItem('g_ms', mineStart); localStorage.setItem('g_bl', bLeft);
+        localStorage.setItem('g_br', bReset);
     }
 
+    // ✅ المحرك الموحد
     setInterval(() => {
-        if (Date.now() - bR > 86400000) { bL = 7; bR = Date.now(); save(); }
-        if (isM) {
-            if (Date.now() - mStart < 86400000) { balance += (1 / 86400); } 
-            else { isM = false; save(); upd(); }
+        if (Date.now() - bReset > 86400000) { bLeft = 7; bReset = Date.now(); save(); }
+        if (isMining) {
+            if (Date.now() - mineStart < 86400000) { balance += (1 / 86400); }
+            else { isMining = false; save(); renderUI(); }
         }
         document.getElementById('bal').innerText = balance.toFixed(6);
         save();
     }, 1000);
 
-    upd();
+    // ✅ تشغيل الواجهة فوراً
+    renderUI();
 </script>
 </body>
 </html>
