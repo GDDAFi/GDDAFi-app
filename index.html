@@ -11,8 +11,8 @@
     <style>
         :root { --gold: #ffd700; --royal: #b8860b; }
         body { background: #05000a; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; border: 4px double var(--royal); box-sizing: border-box; }
-        .header { width: 100%; display: flex; justify-content: space-between; padding: 12px 15px; box-sizing: border-box; }
-        .wallet-btn { background: #111; border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .header { width: 100%; display: flex; justify-content: space-between; padding: 10px 15px; box-sizing: border-box; align-items: center; }
+        .wallet-btn { background: #111; border: 1.5px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .counter-section { margin-top: 5px; text-align: center; }
         .counter { font-size: 3.5rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 25px gold; line-height: 1.1; }
         .currency { font-size: 0.8rem; color: #888; letter-spacing: 2px; margin-top: 5px; }
@@ -50,8 +50,10 @@
 <div class="btn-list">
     <button class="action-btn" id="mBtn" onclick="startMining()">تعدين رئيسي</button>
     <p class="hint" id="mStatus">+1 عملة كل 24 ساعة</p>
-    <button class="action-btn" id="bBtn" onclick="doBoost()">تعزيز (<span id="bLeft">7</span>/7)</button>
+    
+    <button class="action-btn" id="bBtn" onclick="doBoost()">تعزيز (<span id="bLeftDisplay">7</span>/7)</button>
     <p class="hint" id="bStatus">0.005 لكل تعزيز</p>
+    
     <button class="action-btn" id="iBtn" onclick="doInvite()">إحالة صديق (+0.005)</button>
 </div>
 
@@ -90,7 +92,7 @@
         const item = t[cur];
         document.getElementById('wBtn').innerText = item.w;
         document.getElementById('mBtn').innerText = item.m;
-        document.getElementById('bBtn').innerHTML = `${item.b} (<span id="bLeft">${bLeft}</span>/7)`;
+        document.getElementById('bBtn').innerHTML = `${item.b} (<span id="bLeftDisplay">${bLeft}</span>/7)`;
         document.getElementById('bStatus').innerText = item.bS;
         document.getElementById('iBtn').innerText = item.i;
         document.getElementById('nH').innerText = item.nH;
@@ -104,46 +106,61 @@
         if (!isMining) {
             isMining = true;
             mineStart = Date.now();
-            save();
+            saveData();
             alert(t[cur].s);
         }
     }
 
     setInterval(() => {
-        if (Date.now() - bReset > 86400000) { bLeft = 7; bReset = Date.now(); save(); }
+        // تصفير التعزيزات كل 24 ساعة
+        if (Date.now() - bReset > 86400000) { bLeft = 7; bReset = Date.now(); saveData(); }
+        
         if (isMining) {
             let elapsed = Date.now() - mineStart;
             if (elapsed < 86400000) {
-                balance += (1 / 86400);
+                balance += (1 / 86400); // زيادة أجزاء العملة كل ثانية
                 document.getElementById('mBtn').style.opacity = "0.5";
                 document.getElementById('mStatus').innerText = t[cur].mS;
-            } else { isMining = false; save(); }
+            } else { isMining = false; saveData(); }
         } else {
             document.getElementById('mBtn').style.opacity = "1";
             document.getElementById('mStatus').innerText = t[cur].mA;
         }
         document.getElementById('balDisplay').innerText = balance.toFixed(6);
-        document.getElementById('bLeft').innerText = bLeft;
-        save();
+        document.getElementById('bLeftDisplay').innerText = bLeft;
+        saveData();
     }, 1000);
 
     function doBoost() {
-        if (bLeft > 0) { balance += 0.005; bLeft--; save(); }
-        else { alert(cur === 'ar' ? "انتظر التجديد" : "Wait for reset"); }
+        if (bLeft > 0) {
+            balance += 0.005;
+            bLeft--;
+            saveData();
+            updateUI();
+        } else {
+            alert(cur === 'ar' ? "انتظر التجديد بعد 24 ساعة" : "Wait 24h for reset");
+        }
     }
 
     function doInvite() {
         const shareLink = `https://t.me{encodeURIComponent(cur === 'ar' ? "انضم إلي في تعدين عملة القذافي واربح! 💰" : "Join me in mining GddaFi Coin! 💰")}`;
-        tg.openTelegramLink(shareLink);
+        // استخدام الطريقة الرسمية لتليجرام
+        if (tg.openTelegramLink) {
+            tg.openTelegramLink(shareLink);
+        } else {
+            window.location.href = shareLink;
+        }
     }
 
-    function save() {
-        localStorage.setItem('g_bal', balance); localStorage.setItem('g_mining', isMining);
-        localStorage.setItem('g_start', mineStart); localStorage.setItem('g_bL', bLeft);
+    function saveData() {
+        localStorage.setItem('g_bal', balance);
+        localStorage.setItem('g_mining', isMining);
+        localStorage.setItem('g_start', mineStart);
+        localStorage.setItem('g_bL', bLeft);
         localStorage.setItem('g_bR', bReset);
     }
 
-    // ✅ تشغيل التحديث فور التحميل
+    // ✅ تشغيل الواجهة فور التحميل
     updateUI();
 </script>
 </body>
