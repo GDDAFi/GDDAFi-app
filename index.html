@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GddaFi Play - Crypto Pro</title>
     
-    <!-- ✅ كود أرباح Adsterra الخاص بك -->
+    <!-- ✅ إضافة مكتبة تليجرام الرسمية لحل مشكلة زر الإحالة نهائياً -->
+    <script src="https://telegram.org"></script>
+    
+    <!-- ✅ كود أرباح Adsterra -->
     <script src="https://profitablecpmratenetwork.com"></script>
 
     <style>
@@ -17,11 +20,9 @@
         }
         .header { width: 100%; display: flex; justify-content: space-between; padding: 10px 15px; align-items: center; box-sizing: border-box; }
         .wallet-btn { background: #111; border: 1.5px solid var(--gold); color: var(--gold); padding: 6px 14px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: bold; }
-
         .counter-box { margin-top: 5px; text-align: center; }
         .counter { font-size: 4rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 25px gold; line-height: 1; }
         .currency { font-size: 0.9rem; color: #888; letter-spacing: 2px; margin-top: 5px; }
-
         .coin-container { width: 190px; height: 190px; margin: 10px auto; position: relative; }
         .gold-coin { 
             width: 100%; height: 100%; border-radius: 50%; 
@@ -30,26 +31,11 @@
             animation: rotateY 12s linear infinite;
         }
         @keyframes rotateY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-
-        /* ✅ نص COIN GDDAFI الفخم */
-        .fakhama-title { 
-            font-size: 1.3rem; font-weight: bold; color: var(--gold); margin: 5px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); letter-spacing: 3px;
-        }
-
+        .fakhama-title { font-size: 1.3rem; font-weight: bold; color: var(--gold); margin: 5px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); letter-spacing: 3px; }
         .btn-list { display: flex; flex-direction: column; gap: 8px; width: 85%; margin-top: 5px; }
-        .action-btn { 
-            background: linear-gradient(45deg, #2e004f, #8a2be2); border: 2px solid var(--gold);
-            color: white; padding: 14px; border-radius: 35px; font-weight: bold; cursor: pointer; font-size: 1.1rem;
-        }
-        .action-btn:active { transform: scale(0.96); }
+        .action-btn { background: linear-gradient(45deg, #2e004f, #8a2be2); border: 2px solid var(--gold); color: white; padding: 14px; border-radius: 35px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
         .hint-text { font-size: 0.75rem; color: #bbb; margin-top: -6px; }
-
-        /* ✅ شريط التنقل السفلي الاحترافي والمصغر */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; height: 50px; background: rgba(10, 0, 20, 0.98); 
-            border-top: 1px solid var(--royal); display: flex; justify-content: space-around; align-items: center;
-        }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 50px; background: rgba(10, 0, 20, 0.98); border-top: 1px solid var(--royal); display: flex; justify-content: space-around; align-items: center; }
         .nav-link { color: #555; font-size: 0.6rem; display: flex; flex-direction: column; align-items: center; gap: 2px; }
         .nav-link.active { color: var(--gold); font-weight: bold; }
     </style>
@@ -57,7 +43,7 @@
 <body>
 
 <div class="header">
-    <button class="wallet-btn" onclick="adTrigger(); alert('السحب قريبآ ⏳')">🏦 المحفظة</button>
+    <button class="wallet-btn" onclick="alert('السحب قريبآ ⏳')">🏦 المحفظة</button>
     <select onchange="location.reload()" style="background:#000; color:gold; border:1px solid gold; border-radius:5px; padding:3px;">
         <option>العربية 🇸🇦</option>
         <option>English 🇺🇸</option>
@@ -69,7 +55,7 @@
     <div class="currency">GDAFi TOKENS</div>
 </div>
 
-<div class="coin-container"><div class="gold-coin" onclick="adTrigger()"></div></div>
+<div class="coin-container"><div class="gold-coin"></div></div>
 <div class="fakhama-title">COIN GDDAFI</div>
 
 <div class="btn-list">
@@ -82,7 +68,7 @@
     <button class="action-btn" onclick="doInviteFriends()">إحالة صديق (+0.005)</button>
 </div>
 
-<div style="height: 60px;"></div> <!-- مساحة أمان للأزرار -->
+<div style="height: 60px;"></div>
 
 <div class="bottom-nav">
     <div class="nav-link active">🏠 <span>Home</span></div>
@@ -92,49 +78,47 @@
 </div>
 
 <script>
-    function adTrigger() { console.log("Ad Log"); }
+    // ✅ تهيئة تطبيق تليجرام المصغر
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // تمديد التطبيق ليملأ الشاشة
 
-    let balance = parseFloat(localStorage.getItem('g_bal')) || 1.320;
+    let balance = parseFloat(localStorage.getItem('g_bal')) || 1.105856;
     let isMining = localStorage.getItem('g_mining') === 'true';
     let mineStart = parseInt(localStorage.getItem('g_start')) || 0;
     let bCount = parseInt(localStorage.getItem('g_bCount')) || 7;
 
     function startMiningProcess() {
-        adTrigger();
         if (!isMining) {
             isMining = true; mineStart = Date.now(); save();
-            alert("بدأ التعدين السحابي بنجاح! 🚀");
-        } else { alert("التعدين يعمل حالياً..."); }
+            alert("بدأ التعدين السحابي! 🚀");
+        }
     }
 
     setInterval(() => {
         if (isMining) {
             let now = Date.now();
             if (now - mineStart < 86400000) {
-                balance += (1 / 86400); // زيادة دقيقة جداً كل ثانية
+                balance += (1 / 86400);
                 document.getElementById('mBtn').style.opacity = "0.5";
                 document.getElementById('mStatus').innerText = "جاري التعدين... ⛏️";
             } else { isMining = false; save(); }
-        } else {
-            document.getElementById('mBtn').style.opacity = "1";
-            document.getElementById('mStatus').innerText = "+1 عملة كل 24 ساعة";
         }
         document.getElementById('bal').innerText = balance.toFixed(6);
         save();
     }, 1000);
 
     function doBoost() {
-        adTrigger();
         if (bCount > 0) { balance += 0.005; bCount--; save(); }
-        else { alert("انتظر 24 ساعة لتجديد التعزيزات"); }
+        else { alert("انتظر التجديد"); }
     }
 
-    // ✅ الحل النهائي والحقيقي لزر الإحالة داخل تليجرام
+    // ✅ الحل الجذري والنهائي لزر الإحالة باستخدام واجهة تليجرام الرسمية
     function doInviteFriends() {
-        adTrigger();
         const botLink = "https://t.me";
-        const shareMsg = encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
-        window.location.href = `https://t.me{botLink}&text=${shareMsg}`;
+        const shareMsg = "انضم إلي في تعدين عملة القذافي واربح! 💰";
+        
+        // استخدام الطريقة الرسمية لتليجرام لفتح واجهة المشاركة
+        tg.openTelegramLink(`https://t.me{botLink}&text=${encodeURIComponent(shareMsg)}`);
     }
 
     function save() {
