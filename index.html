@@ -9,27 +9,37 @@
     <script src="https://profitablecpmratenetwork.com"></script>
 
     <style>
-        :root { --gold: #ffd700; --royal: #b8860b; }
+        :root { --gold: #ffd700; --royal: #b8860b; --glow: rgba(255, 215, 0, 0.5); }
         body { 
             background: #05000a; color: white; font-family: 'Segoe UI', sans-serif; 
             margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;
             height: 100vh; width: 100vw; overflow: hidden; border: 5px double var(--royal); box-sizing: border-box;
-            /* منع الزوم عند النقر السريع */
             touch-action: manipulation;
         }
         .header { width: 100%; display: flex; justify-content: space-between; padding: 10px 15px; align-items: center; box-sizing: border-box; }
         .wallet-btn { background: #111; border: 1.5px solid var(--gold); color: var(--gold); padding: 6px 14px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: bold; }
 
         .counter-box { margin-top: 5px; text-align: center; }
-        .counter { font-size: 4rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 25px gold; line-height: 1; }
+        .counter { font-size: 3.8rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 25px gold; line-height: 1; }
         .currency { font-size: 0.9rem; color: #888; letter-spacing: 2px; margin-top: 5px; }
 
-        .coin-container { width: 190px; height: 190px; margin: 10px auto; position: relative; }
+        /* ✅ برواز العملة الفخم المطور */
+        .coin-frame {
+            width: 215px; height: 215px;
+            border: 4px solid var(--gold);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow);
+            background: radial-gradient(circle, rgba(184, 134, 11, 0.2) 0%, transparent 75%);
+            margin: 10px auto;
+        }
+        .coin-container { width: 180px; height: 180px; position: relative; }
         .gold-coin { 
             width: 100%; height: 100%; border-radius: 50%; 
             background: url('coin.png') center/cover no-repeat; 
-            border: 4px solid var(--royal); box-shadow: 0 0 35px rgba(138, 43, 226, 0.4);
+            border: 2px solid var(--royal);
             animation: rotateY 12s linear infinite;
+            cursor: pointer;
         }
         @keyframes rotateY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 
@@ -42,139 +52,131 @@
         .action-btn { 
             background: linear-gradient(45deg, #2e004f, #8a2be2); border: 2px solid var(--gold);
             color: white; padding: 14px; border-radius: 35px; font-weight: bold; cursor: pointer; font-size: 1.1rem;
+            transition: 0.2s;
         }
         .action-btn:active { transform: scale(0.96); }
-        .hint-text { font-size: 0.75rem; color: #bbb; margin-top: -6px; text-align: center; }
 
         .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; height: 50px; background: rgba(10, 0, 20, 0.98); 
+            position: fixed; bottom: 0; width: 100%; height: 55px; background: rgba(10, 0, 20, 0.98); 
             border-top: 1px solid var(--royal); display: flex; justify-content: space-around; align-items: center;
         }
-        .nav-link { color: #555; font-size: 0.6rem; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .nav-link { color: #666; font-size: 0.65rem; display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; cursor: pointer; }
         .nav-link.active { color: var(--gold); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <button class="wallet-btn" onclick="alert('السحب قريبآ ⏳')">🏦 المحفظة</button>
-    <select onchange="location.reload()" style="background:#000; color:gold; border:1px solid gold; border-radius:5px; padding:3px;">
-        <option>العربية 🇸🇦</option>
-        <option>English 🇺🇸</option>
+    <button id="txt-wallet" class="wallet-btn" onclick="adTrigger(); alert('Coming Soon...')">🏦 المحفظة</button>
+    <select id="langSelect" onchange="changeLang()" style="background:#000; color:gold; border:1px solid gold; border-radius:5px; padding:3px; font-weight:bold;">
+        <option value="ar">العربية 🇸🇦</option>
+        <option value="en">English 🇺🇸</option>
+        <option value="zh">中文 🇨🇳</option>
+        <option value="fa">فارسی 🇮🇷</option>
     </select>
 </div>
 
 <div class="counter-box">
-    <div class="counter" id="bal">0.000000</div>
-    <div class="currency">GDAFi TOKENS</div>
+    <div class="counter" id="balDisplay">0.000000</div>
+    <div id="txt-tokens" class="currency">GDAFi TOKENS</div>
 </div>
 
-<div class="coin-container"><div class="gold-coin" onclick="adTrigger()"></div></div>
-<div class="fakhama-title">COIN GDDAFI</div>
+<div class="coin-frame">
+    <div class="coin-container">
+        <div class="gold-coin" onclick="adTrigger(); manualTap()"></div>
+    </div>
+</div>
+
+<div id="txt-title" class="fakhama-title">COIN GDDAFI</div>
 
 <div class="btn-list">
-    <button class="action-btn" id="mBtn" onclick="startMiningProcess()">تعدين رئيسي</button>
-    <p class="hint-text" id="mStatus">+1 عملة كل 24 ساعة</p>
+    <button class="action-btn" id="mBtn" onclick="adTrigger(); startMining()">تعدين رئيسي</button>
+    <p class="hint-text" id="mStatus" style="text-align:center; font-size:0.7rem; color:#bbb;">+1 عملة كل 24 ساعة</p>
     
-    <button class="action-btn" onclick="doBoost()">تعزيز (<span id="bVal">7</span>/7)</button>
-    <p class="hint-text">0.005 لكل تعزيز</p>
+    <button class="action-btn" id="boostBtn" onclick="adTrigger(); doBoost()">تعزيز (<span id="bLeft">7</span>/7)</button>
     
-    <button class="action-btn" onclick="doInviteFriends()">إحالة صديق (+0.005)</button>
+    <button id="txt-invite" class="action-btn" onclick="doInviteFriends()">إحالة صديق (+0.005)</button>
 </div>
 
-<div style="height: 60px;"></div>
-
 <div class="bottom-nav">
-    <div class="nav-link active">🏠 <span>Home</span></div>
-    <div class="nav-link" onclick="alert('Soon')">⛏️ <span>Mine</span></div>
-    <div class="nav-link" onclick="alert('Soon')">📋 <span>Tasks</span></div>
-    <div class="nav-link" onclick="doInviteFriends()">👥 <span>Friends</span></div>
+    <div class="nav-link active">🏠 <span id="nav-home">الرئيسية</span></div>
+    <div class="nav-link" onclick="adTrigger(); alert('Soon')">⛏️ <span id="nav-mine">تعدين</span></div>
+    <div class="nav-link" onclick="adTrigger(); alert('Soon')">📋 <span id="nav-tasks">مهام</span></div>
+    <div class="nav-link" onclick="doInviteFriends()">👥 <span id="nav-friends">أصدقاء</span></div>
 </div>
 
 <script>
-    function adTrigger() { console.log("Ad Log"); }
-
-    // تحميل البيانات المحفوظة
-    let balance = parseFloat(localStorage.getItem('g_bal')) || 0.000000;
-    let isMining = localStorage.getItem('g_mining') === 'true';
-    let mineStart = parseInt(localStorage.getItem('g_start')) || 0;
-    let bCount = localStorage.getItem('g_bCount') !== null ? parseInt(localStorage.getItem('g_bCount')) : 7;
-
-    // تحديث الشاشة عند الفتح
-    updateDisplay();
-
-    function startMiningProcess() {
-        adTrigger();
-        if (!isMining) {
-            isMining = true; 
-            mineStart = Date.now(); 
-            save();
-            alert("بدأ التعدين بنجاح! 🚀");
-        } else { 
-            alert("التعدين يعمل حالياً..."); 
-        }
+    function adTrigger() {
+        console.log("Adsterra Triggered");
+        // الكود المرفوع في الهيد سيتكفل بالباقي.
     }
 
-    setInterval(() => {
-        if (isMining) {
-            let now = Date.now();
-            let diff = now - mineStart;
-            if (diff < 86400000) { // خلال الـ 24 ساعة
-                balance += (1 / 86400); 
-                document.getElementById('mBtn').style.opacity = "0.5";
-                document.getElementById('mBtn').innerText = "جاري التعدين...";
-                document.getElementById('mStatus').innerText = "ينتهي التعدين خلال: " + formatTime(86400000 - diff);
-            } else { 
-                isMining = false; 
-                save(); 
-            }
-        } else {
-            document.getElementById('mBtn').style.opacity = "1";
-            document.getElementById('mBtn').innerText = "تعدين رئيسي";
-            document.getElementById('mStatus').innerText = "+1 عملة كل 24 ساعة";
-        }
-        updateDisplay();
-        save();
-    }, 1000);
+    let balance = parseFloat(localStorage.getItem('g_bal')) || 0.000000;
+    let bCount = localStorage.getItem('g_bCount') !== null ? parseInt(localStorage.getItem('g_bCount')) : 7;
+    let isMining = localStorage.getItem('g_mining') === 'true';
+
+    const translations = {
+        ar: { wallet: "🏦 المحفظة", tokens: "GDAFi TOKENS", title: "COIN GDDAFI", mine: "تعدين رئيسي", invite: "إحالة صديق", home: "الرئيسية", mining: "تعدين", tasks: "مهام", friends: "أصدقاء" },
+        en: { wallet: "🏦 Wallet", tokens: "GDAFi TOKENS", title: "COIN GDDAFI", mine: "Main Mining", invite: "Invite Friend", home: "Home", mining: "Mine", tasks: "Tasks", friends: "Friends" },
+        zh: { wallet: "🏦 钱包", tokens: "GDAFi 代币", title: "GDDAFI 金币", mine: "开始采矿", invite: "邀请朋友", home: "首页", mining: "采矿", tasks: "任务", friends: "朋友" },
+        fa: { wallet: "🏦 کیف پول", tokens: "توکن گدافی", title: "سکه گدافی", mine: "استخراج اصلی", invite: "دعوت دوستان", home: "خانه", mining: "استخراج", tasks: "وظایف", friends: "دوستان" }
+    };
+
+    function changeLang() {
+        const l = document.getElementById('langSelect').value;
+        const t = translations[l];
+        document.getElementById('txt-wallet').innerText = t.wallet;
+        document.getElementById('txt-tokens').innerText = t.tokens;
+        document.getElementById('txt-title').innerText = t.title;
+        document.getElementById('mBtn').innerText = t.mine;
+        document.getElementById('txt-invite').innerText = t.invite;
+        document.getElementById('nav-home').innerText = t.home;
+        document.getElementById('nav-mine').innerText = t.mining;
+        document.getElementById('nav-tasks').innerText = t.tasks;
+        document.getElementById('nav-friends').innerText = t.friends;
+    }
+
+    function manualTap() { balance += 0.0001; updateUI(); save(); }
+
+    function startMining() {
+        if(!isMining) {
+            isMining = true;
+            localStorage.setItem('g_mining', 'true');
+            alert("Mining Started! 🚀");
+        } else { alert("Already Mining!"); }
+    }
 
     function doBoost() {
-        adTrigger();
-        if (bCount > 0) { 
-            balance += 0.005; 
-            bCount--; 
-            updateDisplay();
-            save(); 
-        } else { 
-            alert("نفذت التعزيزات لليوم!"); 
-        }
+        if(bCount > 0) {
+            balance += 0.005;
+            bCount--;
+            updateUI();
+            save();
+        } else { alert("No boosts left for today!"); }
     }
 
     function doInviteFriends() {
         adTrigger();
-        // تعديل رابط الإحالة ليعمل بشكل صحيح في تليجرام
-        const botLink = "YOUR_BOT_USERNAME"; 
-        const shareMsg = encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
-        window.location.href = `https://t.me{botLink}&text=${shareMsg}`;
+        // ✅ تم وضع يوزر بوتك هنا بنجاح
+        const text = encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
+        window.open(`https://t.me{text}`, '_blank');
     }
 
-    function formatTime(ms) {
-        let h = Math.floor(ms / 3600000);
-        let m = Math.floor((ms % 3600000) / 60000);
-        let s = Math.floor((ms % 60000) / 1000);
-        return h + "h " + m + "m " + s + "s";
-    }
-
-    function updateDisplay() {
-        document.getElementById('bal').innerText = balance.toFixed(6);
-        document.getElementById('bVal').innerText = bCount;
+    function updateUI() {
+        document.getElementById('balDisplay').innerText = balance.toFixed(6);
+        document.getElementById('bLeft').innerText = bCount;
     }
 
     function save() {
         localStorage.setItem('g_bal', balance);
-        localStorage.setItem('g_mining', isMining);
-        localStorage.setItem('g_start', mineStart);
         localStorage.setItem('g_bCount', bCount);
     }
+
+    setInterval(() => {
+        if(isMining) { balance += (1/86400); updateUI(); save(); }
+    }, 1000);
+
+    updateUI(); 
 </script>
 </body>
 </html>
