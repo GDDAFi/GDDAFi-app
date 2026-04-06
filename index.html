@@ -3,115 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Official</title>
+    <title>GddaFi Play</title>
     <script src="https://telegram.org"></script>
     <script src="https://profitablecpmratenetwork.com" async></script>
     <style>
-        body { 
-            background: #000; color: white; margin: 0; padding: 0;
-            display: flex; flex-direction: column; align-items: center;
-            height: 100vh; overflow: hidden; font-family: sans-serif;
-        }
-        .counter-box { margin-top: 50px; text-align: center; }
-        #bal { font-size: 3.8rem; color: #ffd700; font-weight: bold; text-shadow: 0 0 20px gold; }
+        body { background: #000; color: white; font-family: sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
+        .header { margin-top: 25px; text-align: center; }
+        #bal { font-size: 3.5rem; color: #ffd700; font-weight: bold; text-shadow: 0 0 15px gold; }
         
-        .app-container {
-            position: relative; 
-            width: 380px; /* حجم مناسب لأغلب الشاشات */
-            height: 380px; 
-            margin-top: 20px;
-            background: url('coin.png') center/contain no-repeat;
-        }
+        /* عرض صورتك بوضوح في المنتصف */
+        .image-container { width: 280px; height: 280px; margin: 20px auto; }
+        .main-img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,215,0,0.3)); }
 
-        /* الأزرار الشفافة فوق الدوائر الذهبية */
-        .touch-btn {
-            position: absolute; 
-            width: 75px; height: 75px;
-            border-radius: 50%; 
-            background: rgba(255, 255, 255, 0); /* شفافة تماماً */
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
+        /* أزرار حقيقية واضحة تحت الصورة لضمان العمل */
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 90%; margin-top: 10px; }
+        .btn { 
+            background: #111; border: 2px solid #ffd700; color: #ffd700; 
+            padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
+            font-size: 1rem; text-align: center;
         }
-        
-        /* ضبط الأماكن بناءً على الصورة المرسلة */
-        #btn-mine   { top: 125px; left: 245px; } /* دائرة تعدين */
-        #btn-boost  { top: 225px; left: 245px; } /* دائرة تعزيز */
-        #btn-invite { top: 125px; left: 60px; }  /* دائرة إحالة */
-        #btn-wallet { top: 225px; left: 60px; }  /* دائرة محفظة */
-
-        .touch-btn:active { background: rgba(255, 215, 0, 0.2); }
-
-        .status-msg { 
-            margin-top: 30px; color: #ffd700; font-size: 0.9rem; 
-            text-align: center; padding: 0 20px;
-        }
+        .btn:active { background: #ffd700; color: #000; }
+        .status { margin-top: 15px; color: #888; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-<div class="counter-box">
+<div class="header">
     <div id="bal">0.000000</div>
-    <div style="color:#888; letter-spacing:2px; font-size:0.8rem; margin-top:-5px;">GDAFi TOKENS</div>
+    <div style="color:#666; font-size:0.8rem;">GDAFi TOKENS</div>
 </div>
 
-<div class="app-container">
-    <div class="touch-btn" id="btn-mine" onclick="startMine()"></div>
-    <div class="touch-btn" id="btn-boost" onclick="doBoost()"></div>
-    <div class="touch-btn" id="btn-invite" onclick="invite()"></div>
-    <div class="touch-btn" id="btn-wallet" onclick="tg.showAlert('السحب سيفتح قريباً عند الوصول لـ 100 عملة!')"></div>
+<div class="image-container">
+    <img src="coin.png" class="main-img" alt="GddaFi Coin">
 </div>
 
-<div class="status-msg" id="st">انقر على دائرة "تعدين" للبدء</div>
+<div class="controls">
+    <div class="btn" onclick="startMine()">⛏️ ابدأ التعدين</div>
+    <div class="btn" id="boostBtn" onclick="doBoost()">⚡ تعزيز (7/7)</div>
+    <div class="btn" onclick="invite()">👥 إحالة صديق</div>
+    <div class="btn" onclick="tg.showAlert('قريباً')">🏦 المحفظة</div>
+</div>
+
+<div class="status" id="st">انقر على "ابدأ التعدين" لتفعيل العداد</div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
     let balance = parseFloat(localStorage.getItem('g_b')) || 0;
-    let isMining = localStorage.getItem('g_im') === 'true';
     let bLeft = parseInt(localStorage.getItem('g_bl')) ?? 7;
+    let isMining = localStorage.getItem('g_im') === 'true';
     let bReset = parseInt(localStorage.getItem('g_br')) || Date.now();
 
     function updateUI() {
         document.getElementById('bal').innerText = balance.toFixed(6);
-        document.getElementById('st').innerText = isMining ? `جاري التعدين.. التعزيزات المتاحة: ${bLeft}/7` : `التعدين متوقف.. اضغط على أيقونة التعدين`;
+        document.getElementById('boostBtn').innerText = `⚡ تعزيز (${bLeft}/7)`;
+        document.getElementById('st').innerText = isMining ? "جاري التعدين (1 عملة/يوم)" : "التعدين متوقف";
         localStorage.setItem('g_b', balance);
-        localStorage.setItem('g_im', isMining);
         localStorage.setItem('g_bl', bLeft);
+        localStorage.setItem('g_im', isMining);
     }
 
     function startMine() {
-        if(!isMining) {
-            isMining = true;
-            tg.HapticFeedback.notificationOccurred('success');
-            updateUI();
-        }
+        isMining = true;
+        tg.showAlert("بدأ التعدين التلقائي! 🚀");
+        updateUI();
     }
 
     function doBoost() {
         if(bLeft > 0) {
-            balance += 0.005; 
-            bLeft--;
+            balance += 0.005; bLeft--;
             tg.HapticFeedback.impactOccurred('medium');
             updateUI();
-        } else {
-            tg.showAlert("انتهت تعزيزات اليوم، عد بعد 24 ساعة!");
-        }
+        } else { tg.showAlert("انتهت محاولات اليوم"); }
     }
 
     function invite() {
-        const botLink = "https://t.me";
-        const shareLink = `https://t.me{encodeURIComponent(botLink)}&text=${encodeURIComponent("انضم لتعدين عملة GddaFi واربح! 💰")}`;
-        tg.openTelegramLink(shareLink);
+        const link = "https://t.me" + encodeURIComponent("انضم إلي في تعدين عملة القذافي!");
+        tg.openTelegramLink(link);
     }
 
-    // محرك التعدين (1 عملة كل 24 ساعة)
     setInterval(() => {
         if (Date.now() - bReset > 86400000) { bLeft = 7; bReset = Date.now(); localStorage.setItem('g_br', bReset); }
-        if(isMining) { 
-            balance += (1 / 86400); 
-            updateUI(); 
-        }
+        if(isMining) { balance += (1 / 86400); updateUI(); }
     }, 1000);
 
     updateUI();
