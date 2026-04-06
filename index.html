@@ -3,101 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Play - Crypto Pro</title>
+    <title>GddaFi Play - Cloud Mining</title>
     
-    <!-- ✅ كود أرباح Adsterra الخاص بك -->
+    <!-- ✅ كود أرباح Adsterra -->
     <script src="https://profitablecpmratenetwork.com"></script>
 
     <style>
-        :root { --gold: #ffd700; --royal: #b8860b; --glow: rgba(255, 215, 0, 0.5); }
-        
+        :root { --gold: #ffd700; --royal: #b8860b; }
         body { 
-            background: #05000a; color: white; font-family: 'Orbitron', 'Segoe UI', sans-serif; 
+            background: #05000a; color: white; font-family: 'Segoe UI', sans-serif; 
             margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;
-            height: 100vh; width: 100vw; overflow: hidden;
-            border: 6px double var(--royal); box-sizing: border-box;
+            height: 100vh; width: 100vw; overflow: hidden; border: 4px double var(--royal); box-sizing: border-box;
         }
+        .header { width: 100%; display: flex; justify-content: space-between; padding: 10px 15px; align-items: center; }
+        .wallet-btn { background: #111; border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; }
 
-        .header { width: 100%; display: flex; justify-content: space-between; padding: 15px; box-sizing: border-box; z-index: 10; }
-        
-        .wallet-card { background: linear-gradient(135deg, #111, #222); border: 1px solid var(--gold); padding: 8px 15px; border-radius: 12px; color: var(--gold); font-weight: bold; cursor: pointer; box-shadow: 0 0 10px var(--glow); font-size: 14px; }
+        .counter-box { margin-top: 10px; }
+        .counter { font-size: 3.8rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 20px gold; }
+        .currency { font-size: 1rem; color: #888; letter-spacing: 2px; margin-top: -10px; }
 
-        .counter-container { margin: 10px 0; text-align: center; }
-        .counter { font-size: 4.2rem; color: var(--gold); font-weight: 900; text-shadow: 0 0 30px var(--gold); }
-        .currency-name { font-size: 1.2rem; color: #aaa; margin-top: -10px; letter-spacing: 2px; }
-
-        .coin-box { width: 230px; height: 230px; margin: 15px auto; position: relative; cursor: pointer; transition: 0.1s; }
+        .coin-box { width: 180px; height: 180px; margin: 15px auto; position: relative; }
         .gold-coin { 
             width: 100%; height: 100%; border-radius: 50%; 
             background: url('coin.png') center/cover no-repeat; 
-            border: 5px solid var(--royal); box-shadow: 0 0 40px rgba(138, 43, 226, 0.4);
-            animation: rotateY 12s linear infinite;
+            border: 3px solid var(--royal); box-shadow: 0 0 25px #8a2be2;
+            animation: rotate 15s linear infinite;
         }
-        @keyframes rotateY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-        .coin-box:active { transform: scale(0.92); }
+        @keyframes rotate { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        .fakhama { font-size: 1.2rem; font-weight: bold; color: var(--gold); margin: 5px 0; letter-spacing: 2px; }
 
-        /* ✅ نص COIN GDDAFI الفخم تحت الصورة */
-        .fakhama-text { 
-            font-size: 1.5rem; font-weight: bold; margin: 10px 0;
-            background: linear-gradient(to bottom, #ffd700, #b8860b);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.5); letter-spacing: 3px;
+        .btn-group { display: flex; flex-direction: column; gap: 8px; width: 85%; margin-top: 10px; z-index: 5; }
+        .action-btn { 
+            background: linear-gradient(45deg, #2e004f, #8a2be2); border: 1.5px solid var(--gold);
+            color: white; padding: 12px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 1rem;
         }
+        .sub-info { font-size: 0.75rem; color: #aaa; margin-top: -5px; }
 
-        .btn-group { display: flex; flex-direction: column; gap: 12px; width: 90%; max-width: 400px; padding: 10px; }
-        .main-btn { 
-            background: linear-gradient(45deg, #2e004f, #8a2be2); 
-            border: 2px solid var(--gold); color: white; padding: 16px; 
-            border-radius: 40px; font-size: 1.2rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); position: relative; overflow: hidden;
-        }
-        .main-btn::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: rgba(255,255,255,0.1); transform: rotate(45deg); transition: 0.3s; }
-        
-        .sub-text { font-size: 0.8rem; color: #ccc; margin-top: -10px; }
-
-        /* ✅ شريط التنقل السفلي (Crypto Style) */
+        /* ✅ شريط التنقل السفلي المصغر */
         .nav-bar { 
-            position: fixed; bottom: 15px; width: 90%; background: rgba(20, 0, 40, 0.9); 
-            border: 1px solid var(--gold); border-radius: 20px; display: flex; 
-            justify-content: space-around; padding: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+            position: fixed; bottom: 0; width: 100%; height: 55px; background: rgba(10, 0, 20, 0.95); 
+            border-top: 1px solid var(--royal); display: flex; justify-content: space-around; align-items: center;
         }
-        .nav-item { color: #888; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-item { color: #666; font-size: 0.65rem; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .nav-item.active { color: var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="wallet-card" onclick="adClick(); alert(t[cur].wMsg)">
-        🏦 <span id="wBtn">Wallet</span>
-    </div>
-    <select class="lang-select" id="lang" onchange="changeLang()" style="background:#1a0033; color:white; border:1px solid gold; border-radius:8px; padding:5px;">
-        <option value="ar">العربية 🇸🇦</option>
-        <option value="en">English 🇺🇸</option>
+    <button class="wallet-btn" onclick="alert(t[cur].wMsg)">🏦 <span id="wBtn">Wallet</span></button>
+    <select id="lang" onchange="changeLang()" style="background:#000; color:gold; border:1px solid gold; border-radius:5px;">
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
     </select>
 </div>
 
-<div class="counter-container">
-    <div class="counter" id="bal">0.000</div>
-    <div class="currency-name">GDAFi TOKENS</div>
+<div class="counter-box">
+    <div class="counter" id="balDisplay">0.000000</div>
+    <div class="currency">GDAFi TOKENS</div>
 </div>
 
-<div class="coin-box" onclick="handleTap()">
-    <div class="gold-coin"></div>
-</div>
-
-<!-- ✅ نص COIN GDDAFI الفخم -->
-<div class="fakhama-text">COIN GDDAFI</div>
+<div class="coin-box"><div class="gold-coin"></div></div>
+<div class="fakhama">COIN GDDAFI</div>
 
 <div class="btn-group">
-    <button class="main-btn" id="mBtn" onclick="doMine()">تعدين رئيسي</button>
-    <p class="sub-text" id="mSub">+1 عملة كل 24 ساعة</p>
+    <button class="action-btn" id="mBtn" onclick="startMining()">تعدين رئيسي</button>
+    <p class="sub-info" id="mStatus">اضغط للبدء (+1 عملة/24س)</p>
     
-    <button class="main-btn" id="bBtn" onclick="doBoost()">Boost (<span id="bLeft">7</span>/7)</button>
-    <p class="sub-text" id="bSub">0.005 per boost</p>
+    <button class="action-btn" id="bBtn" onclick="doBoost()">Boost (<span id="bLeft">7</span>/7)</button>
+    <p class="sub-info">0.005 per boost</p>
     
-    <button class="main-btn" id="iBtn" onclick="doInvite()">إحالة صديق</button>
+    <button class="action-btn" id="iBtn" onclick="doInvite()">إحالة صديق</button>
 </div>
+
+<div style="height: 70px;"></div> <!-- مساحة لضمان عدم التغطية -->
 
 <div class="nav-bar">
     <div class="nav-item active">🏠 <span>Home</span></div>
@@ -107,81 +86,69 @@
 </div>
 
 <script>
-    function adClick() { console.log("Ad Triggered"); }
-
     const t = {
-        ar: { w: "المحفظة", wMsg: "السحب قريبآ ⏳", m: "تعدين رئيسي", mSub: "+1 عملة كل 24 ساعة", b: "تعزيز", i: "إحالة صديق", s: "تم بنجاح!", l: "انتظر 24 ساعة" },
-        en: { w: "Wallet", wMsg: "Withdrawal soon ⏳", m: "Main Mine", mSub: "+1 coin every 24h", b: "Boost", i: "Invite Friend", s: "Success!", l: "Wait 24h" }
+        ar: { wMsg: "السحب قريبآ ⏳", s: "بدأ التعدين السحابي! 🚀" },
+        en: { wMsg: "Withdrawal soon ⏳", s: "Cloud Mining Started! 🚀" }
     };
 
     let cur = localStorage.getItem('lang') || 'ar';
-    let balance = parseFloat(localStorage.getItem('bal')) || 1.175;
-    let lastM = parseInt(localStorage.getItem('lastM')) || 0;
-    let bCount = parseInt(localStorage.getItem('bCount')) || 7;
-    let lastBReset = parseInt(localStorage.getItem('lastB')) || Date.now();
+    let balance = parseFloat(localStorage.getItem('g_bal')) || 1.210;
+    let isMining = localStorage.getItem('g_isMining') === 'true';
+    let lastMineStart = parseInt(localStorage.getItem('g_mineStart')) || 0;
+    let bCount = parseInt(localStorage.getItem('g_bCount')) || 7;
 
-    function changeLang() {
-        cur = document.getElementById('lang').value;
-        localStorage.setItem('lang', cur);
-        updateUI();
+    // ✅ منطق التعدين الاحترافي (زيادة تلقائية مستمرة)
+    function startMining() {
+        if (!isMining) {
+            isMining = true;
+            lastMineStart = Date.now();
+            save();
+            alert(t[cur].s);
+        } else {
+            alert("التعدين يعمل حالياً...");
+        }
     }
 
-    function updateUI() {
-        document.getElementById('wBtn').innerText = t[cur].w;
-        document.getElementById('mBtn').innerText = t[cur].m;
-        document.getElementById('mSub').innerText = t[cur].mSub;
-        document.getElementById('iBtn').innerText = t[cur].i;
-        document.getElementById('bal').innerText = balance.toFixed(3);
+    setInterval(() => {
+        if (isMining) {
+            let elapsed = Date.now() - lastMineStart;
+            if (elapsed < 86400000) {
+                // زيادة بمقدار جزء من العملة كل ثانية (1 عملة / 86400 ثانية)
+                balance += (1 / 86400);
+                document.getElementById('mBtn').style.opacity = "0.5";
+                document.getElementById('mStatus').innerText = "جاري التعدين... ⛏️";
+            } else {
+                isMining = false;
+                save();
+            }
+        } else {
+            document.getElementById('mBtn').style.opacity = "1";
+            document.getElementById('mStatus').innerText = "اضغط للبدء (+1 عملة/24س)";
+        }
+        document.getElementById('balDisplay').innerText = balance.toFixed(6);
         document.getElementById('bLeft').innerText = bCount;
-        
-        if (Date.now() - lastBReset > 86400000) { bCount = 7; lastBReset = Date.now(); save(); }
-    }
-
-    // ✅ عداد التعدين بزيادة سلسة (Animation)
-    function doMine() {
-        adClick();
-        if (Date.now() - lastM > 86400000) {
-            let target = balance + 1;
-            let interval = setInterval(() => {
-                balance += 0.01;
-                document.getElementById('bal').innerText = balance.toFixed(3);
-                if (balance >= target) {
-                    balance = target;
-                    clearInterval(interval);
-                    lastM = Date.now();
-                    save();
-                    alert(t[cur].s);
-                    updateUI();
-                }
-            }, 10);
-        } else { alert(t[cur].l); }
-    }
+        save();
+    }, 1000);
 
     function doBoost() {
-        adClick();
-        if (bCount > 0) {
-            balance += 0.005; bCount--; save(); updateUI();
-        } else { alert(t[cur].l); }
+        if (bCount > 0) { balance += 0.005; bCount--; save(); }
+        else { alert("انتظر التجديد"); }
     }
 
-    // ✅ الحل النهائي لزر الإحالة (رابط مباشر)
     function doInvite() {
-        adClick();
-        const shareLink = "https://t.me" + encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
-        window.location.href = shareLink;
+        const url = "https://t.me" + encodeURIComponent("انضم إلي واربح عملة القذافي! 💰");
+        window.location.href = url;
     }
-
-    function handleTap() { adClick(); }
 
     function save() {
-        localStorage.setItem('bal', balance);
-        localStorage.setItem('lastM', lastM);
-        localStorage.setItem('bCount', bCount);
-        localStorage.setItem('lastB', lastBReset);
+        localStorage.setItem('g_bal', balance);
+        localStorage.setItem('g_isMining', isMining);
+        localStorage.setItem('g_mineStart', lastMineStart);
+        localStorage.setItem('g_bCount', bCount);
     }
 
+    function changeLang() { cur = document.getElementById('lang').value; localStorage.setItem('lang', cur); location.reload(); }
     document.getElementById('lang').value = cur;
-    updateUI();
 </script>
 </body>
 </html>
