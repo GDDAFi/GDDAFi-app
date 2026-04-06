@@ -3,48 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Play - Stable Pro</title>
+    <title>GddaFi Play - Royal Edition</title>
     <script src="https://telegram.org"></script>
     <style>
         :root { --gold: #ffd700; --bg: #05000a; }
-        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
+        
         .header { width: 92%; display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-        .lang-sel { background: #111; color: var(--gold); border: 1px solid var(--gold); border-radius: 8px; padding: 5px; font-size: 0.8rem; }
-        #bal { font-size: 3.5rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 20px gold; margin-top: 10px; }
-        .image-box { width: 260px; height: 260px; margin: 25px auto; position: relative; }
-        .coin-img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255,215,0,0.3)); border-radius: 50%; }
-        .rotate { animation: spin 15s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .lang-sel { background: #000; color: var(--gold); border: 1px solid var(--gold); border-radius: 8px; padding: 5px; font-size: 0.8rem; }
+        .wallet-top { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 5px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        #bal { font-size: 4rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 25px gold; margin-top: 15px; }
+        
+        .image-container { width: 280px; height: 280px; margin: 25px auto; perspective: 1000px; }
+        .main-coin { 
+            width: 100%; height: 100%; object-fit: contain; 
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));
+            border-radius: 50%;
+        }
+        /* كود الحركة الدائرية */
+        .rotate-active { animation: spinCoin 15s linear infinite; }
+        @keyframes spinCoin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
         .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 92%; margin-top: 5px; }
-        .btn { background: #111; border: 2px solid var(--gold); color: var(--gold); padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.9rem; text-align: center; }
+        .btn { 
+            background: #000; border: 2px solid var(--gold); color: var(--gold); 
+            padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer;
+            font-size: 1rem; text-align: center;
+        }
         .btn:active { background: var(--gold); color: #000; transform: scale(0.95); }
-        .status { margin-top: 20px; color: #888; font-size: 0.75rem; text-align: center; }
+        .status { margin-top: 20px; color: #888; font-size: 0.8rem; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <button class="btn" style="padding: 5px 12px;" onclick="showWallet()">🏦 <span id="txt-w">المحفظة</span></button>
     <select class="lang-sel" id="lSel" onchange="setL(this.value)">
         <option value="ar">العربية 🇸🇦</option>
         <option value="en">English 🇺🇸</option>
         <option value="zh">中文 🇨🇳</option>
         <option value="fa">فارسی 🇮🇷</option>
     </select>
+    <button class="wallet-top" onclick="showW()">🏦 المحفظة</button>
 </div>
 
 <div id="bal">0.000000</div>
-<div style="color:#666; font-size:0.8rem; letter-spacing: 2px;">GDAFi TOKENS</div>
+<div style="color:#666; font-size:0.8rem; letter-spacing: 3px; margin-top: -10px;">GDAFi TOKENS</div>
 
-<div class="image-box">
-    <img src="coin.png" id="coinImg" class="coin-img" alt="GddaFi">
+<div class="image-container">
+    <img src="coin.png" id="coinImg" class="main-coin" alt="GddaFi">
 </div>
 
 <div class="controls">
-    <button class="btn" id="mBtn" onclick="mine()">⛏️ <span id="txt-m">ابدأ التعدين</span></button>
-    <button class="btn" id="bBtn" onclick="boost()">⚡ <span id="txt-b">تعزيز</span> (7/7)</button>
-    <button class="btn" onclick="invite()">👥 <span id="txt-i">إحالة صديق</span></button>
-    <button class="btn" onclick="showWallet()">💰 USDT/TRC20</button>
+    <button class="btn" id="mBtn" onclick="mine()">⛏️ ابدأ التعدين</button>
+    <button class="btn" id="bBtn" onclick="boost()">⚡ تعزيز (7/7)</button>
+    <button class="btn" onclick="showW()">💰 USDT/TRC20</button>
+    <button class="btn" onclick="invite()">👥 إحالة صديق</button>
 </div>
 
 <div class="status" id="st">انقر على "ابدأ التعدين" لتنشيط العداد</div>
@@ -54,16 +69,15 @@
     tg.expand();
 
     const DICT = {
-        ar: { w:"المحفظة", m:"ابدأ التعدين", ms:"جاري التعدين..", b:"تعزيز", i:"إحالة صديق", alertW:"السحب قريبآ USDT/TRC20 ⏳", st:"ابدأ التعدين لتفعيل العداد", stA:"التعدين نشط (1 عملة/24س)" },
-        en: { w:"Wallet", m:"Start Mining", ms:"Mining..", b:"Boost", i:"Invite Friend", alertW:"Withdrawal soon USDT/TRC20 ⏳", st:"Click Start to activate", stA:"Mining Active (1 Coin/24h)" },
-        zh: { w:"钱包", m:"开始挖掘", ms:"挖掘中..", b:"加速", i:"邀请朋友", alertW:"即将提现 USDT/TRC20 ⏳", st:"点击开始以激活", stA:"挖掘进行中 (1币/24小时)" },
-        fa: { w:"کیف پول", m:"شروع استخراج", ms:"در حال استخراج..", b:"تقویت", i:"ارجاع دوستان", alertW:"برداشت به زودی USDT/TRC20 ⏳", st:"برای فعال سازی کلیک کنید", stA:"استخراج فعال است (1 سکه/24س)" }
+        ar: { m:"ابدأ التعدين", ms:"جاري التعدين..", wMsg:"السحب قريبآ USDT/TRC20 ⏳", stA:"التعدين نشط (1 عملة/24س)" },
+        en: { m:"Start Mining", ms:"Mining..", wMsg:"Withdrawal soon USDT/TRC20 ⏳", stA:"Mining Active (1 Coin/24h)" },
+        zh: { m:"开始挖掘", ms:"挖掘中..", wMsg:"即将提现 USDT/TRC20 ⏳", stA:"挖掘进行中 (1币/24h)" },
+        fa: { m:"شروع استخراج", ms:"در حال استخراج..", wMsg:"برداشت به زودی USDT/TRC20 ⏳", stA:"استخراج فعال (1 سکه/24س)" }
     };
 
-    // استعادة البيانات باستخدام مسمياتك القديمة لضمان الثبات
+    // استعادة البيانات بمسمياتك g_bal و g_bCount
     let balance = parseFloat(localStorage.getItem('g_bal')) || 0;
     let isMining = localStorage.getItem('g_mining') === 'true';
-    let mineStart = parseInt(localStorage.getItem('g_start')) || Date.now();
     let bCount = parseInt(localStorage.getItem('g_bCount')) ?? 7;
     let CUR = localStorage.getItem('g_lang') || 'ar';
 
@@ -72,19 +86,16 @@
     function updateUI() {
         const d = DICT[CUR];
         document.getElementById('bal').innerText = balance.toFixed(6);
-        document.getElementById('txt-w').innerText = d.w;
-        document.getElementById('txt-m').innerText = isMining ? d.ms : d.m;
-        document.getElementById('txt-b').innerText = d.b;
-        document.getElementById('bBtn').innerHTML = `⚡ <span id="txt-b">${d.b}</span> (${bCount}/7)`;
-        document.getElementById('txt-i').innerText = d.i;
-        document.getElementById('st').innerText = isMining ? d.stA : d.st;
+        document.getElementById('mBtn').innerText = isMining ? d.ms : d.m;
+        document.getElementById('bBtn').innerText = `⚡ تعزيز (${bCount}/7)`;
+        document.getElementById('st').innerText = isMining ? d.stA : "انقر على ابدأ التعدين";
         document.getElementById('lSel').value = CUR;
-        if(isMining) document.getElementById('coinImg').classList.add('rotate');
+        if(isMining) document.getElementById('coinImg').classList.add('rotate-active');
     }
 
     function mine() {
         if(!isMining) {
-            isMining = true; mineStart = Date.now();
+            isMining = true;
             tg.HapticFeedback.notificationOccurred('success');
             save(); updateUI();
         }
@@ -95,21 +106,18 @@
             balance += 0.005; bCount--;
             tg.HapticFeedback.impactOccurred('medium');
             save(); updateUI();
-        } else { tg.showAlert("عد بعد 24 ساعة"); }
+        } else { tg.showAlert("انتهت تعزيزات اليوم"); }
     }
 
-    function showWallet() { tg.showAlert(DICT[CUR].alertW); }
+    function showW() { tg.showAlert(DICT[CUR].wMsg); }
 
     function invite() {
-        const link = "https://t.me" + encodeURIComponent(DICT[CUR].i);
-        tg.openTelegramLink(link);
+        tg.openTelegramLink("https://t.me me!");
     }
 
-    // نظام الحفظ الخاص بك
     function save() {
         localStorage.setItem('g_bal', balance);
         localStorage.setItem('g_mining', isMining);
-        localStorage.setItem('g_start', mineStart);
         localStorage.setItem('g_bCount', bCount);
     }
 
@@ -120,9 +128,6 @@
             document.getElementById('bal').innerText = balance.toFixed(6);
         }
     }, 1000);
-
-    // حفظ تلقائي كل 10 ثوانٍ
-    setInterval(save, 10000);
 
     window.onload = updateUI;
 </script>
