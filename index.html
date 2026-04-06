@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GddaFi Play - Crypto Pro</title>
     
-    <!-- ✅ كود أرباح Adsterra الخاص بك (لا تقم بإزالته) -->
+    <!-- ✅ كود أرباح Adsterra الخاص بك -->
     <script src="https://pl29042900.profitablecpmratenetwork.com/67/d9/1b/67d91bfab7947c9808641625010d7e0c.js"></script>
     
     <!-- ✅ مكتبة تليجرام الرسمية -->
@@ -54,6 +54,18 @@
             cursor: pointer;
             font-size: 11px;
             font-weight: bold;
+        }
+
+        .sound-btn {
+            background: #111;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 5px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
         }
 
         .counter-box {
@@ -180,19 +192,15 @@
             font-size: 18px;
             display: block;
         }
-
-        /* إضافة تحسين للتمرير في حال احتاج أي محتوى زائد */
-        .scrollable {
-            overflow-y: auto;
-            flex: 1;
-            width: 100%;
-        }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <button id="txt-wallet" class="wallet-btn">🏦 المحفظة</button>
+    <div style="display: flex; gap: 8px;">
+        <button id="txt-wallet" class="wallet-btn">🏦 المحفظة</button>
+        <button id="soundToggle" class="sound-btn">🔊 إيقاف الصوت</button>
+    </div>
     <select id="langSelect" style="background:#000; color:gold; border:1px solid gold; border-radius:5px; padding:3px; font-size:10px;">
         <option value="ar">العربية 🇸🇦</option>
         <option value="en">English 🇺🇸</option>
@@ -238,7 +246,6 @@
             tg.ready();
             tg.expand();
         } catch(e) {
-            // محاكاة للاختبار خارج التليجرام
             tg = {
                 ready: () => {},
                 expand: () => {},
@@ -251,13 +258,171 @@
         }
         window.tg = tg;
 
-        // ---------- المتغيرات العامة ----------
+        // ---------- نظام الصوت (المطر والرعد باستخدام Web Audio API) ----------
+        let audioCtx = null;
+        let rainGain = null;
+        let thunderGain = null;
+        let isSoundOn = false;
+        let rainInterval = null;
+        let thunderTimeout = null;
+        let soundAllowed = false; // لا يسمح بتشغيل الصوت إلا بعد تفاعل المستخدم
+
+        function initAudio() {
+            if (audioCtx) return;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                rainGain = audioCtx.createGain();
+                thunderGain = audioCtx.createGain();
+                rainGain.gain.value = 0;
+                thunderGain.gain.value = 0;
+                rainGain.connect(audioCtx.destination);
+                thunderGain.connect(audioCtx.destination);
+            } catch(e) { console.warn("Web Audio not supported"); }
+        }
+
+        // صوت المطر: قطيرات عشوائية سريعة
+        function playRainDrop() {
+            if (!audioCtx || !isSoundOn || !soundAllowed) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 2000 + Math.random() * 1000;
+            gain.gain.value = 0.03 + Math.random() * 0.05;
+            osc.connect(gain);
+            gain.connect(rainGain);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+            osc.stop(now + 0.2);
+        }
+
+        // صوت الرعد: نغمة منخفضة عميقة مع تشويه
+        function playThunder() {
+            if (!audioCtx || !isSoundOn || !soundAllowed) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.value = 80 + Math.random() * 40;
+            gain.gain.value = 0.4;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 200;
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(thunderGain);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+            osc.stop(now + 1.5);
+            // اهتزاز خفيف للتردد
+            osc.frequency.exponentialRampToValueAtTime(30, now + 0.8);
+        }
+
+        function startRain() {
+            if (rainInterval) clearInterval(rainInterval);
+            rainInterval = setInterval(() => {
+                if (isSoundOn && soundAllowed) playRainDrop();
+            }, 150);
+        }
+
+        function stopRain() {
+            if (rainInterval) clearInterval(rainInterval);
+            rainInterval = null;
+        }
+
+        function scheduleThunder() {
+            if (thunderTimeout) clearTimeout(thunderTimeout);
+            const delay = 20000 + Math.random() * 20000; // 20-40 ثانية
+            thunderTimeout = setTimeout(() => {
+                if (isSoundOn && soundAllowed) playThunder();
+                scheduleThunder();
+            }, delay);
+        }
+
+        function enableSound() {
+            if (!audioCtx) initAudio();
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume().then(() => {
+                    isSoundOn = true;
+                    soundAllowed = true;
+                    startRain();
+                    scheduleThunder();
+                    updateSoundButton();
+                }).catch(e => console.warn);
+            } else {
+                isSoundOn = true;
+                soundAllowed = true;
+                startRain();
+                scheduleThunder();
+                updateSoundButton();
+            }
+        }
+
+        function disableSound() {
+            isSoundOn = false;
+            stopRain();
+            if (thunderTimeout) clearTimeout(thunderTimeout);
+            thunderTimeout = null;
+            updateSoundButton();
+        }
+
+        function toggleSound() {
+            if (!soundAllowed) {
+                enableSound();
+                return;
+            }
+            if (isSoundOn) {
+                disableSound();
+            } else {
+                enableSound();
+            }
+        }
+
+        function updateSoundButton() {
+            const btn = document.getElementById('soundToggle');
+            if (isSoundOn && soundAllowed) btn.innerHTML = '🔊 إيقاف الصوت';
+            else btn.innerHTML = '🔇 تشغيل الصوت';
+        }
+
+        // تفعيل الصوت عند أول نقرة من المستخدم
+        function firstInteraction() {
+            if (!soundAllowed) {
+                enableSound();
+            }
+        }
+
+        // ربط أول تفاعل مع أي مكان في الصفحة
+        document.body.addEventListener('click', firstInteraction, { once: true });
+        // التأكد من أن الأزرار الرئيسية أيضاً تشغل الصوت
+        const interactive = ['coinImg', 'mBtn', 'boostBtn', 'txt-invite', 'txt-wallet', 'langSelect', 'soundToggle'];
+        interactive.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', firstInteraction);
+        });
+
+        document.getElementById('soundToggle').addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSound();
+        });
+
+        // استعادة حالة الصوت من localStorage (إذا كان مفضلاً)
+        const storedSound = localStorage.getItem('soundEnabled');
+        if (storedSound === 'true') {
+            // ننتظر أول نقرة لتفعيل الصوت تلقائياً
+            soundAllowed = false;
+            isSoundOn = false;
+        } else {
+            soundAllowed = false;
+            isSoundOn = false;
+        }
+
+        // ---------- باقي كود اللعبة ----------
         let balance = 0.0;
         let bCount = 7;
         let isMining = false;
         let lastBoostDate = '';
 
-        // تحميل البيانات من localStorage
         try {
             balance = parseFloat(localStorage.getItem('g_bal')) || 0.0;
             bCount = parseInt(localStorage.getItem('g_bCount')) || 7;
@@ -265,7 +430,6 @@
             lastBoostDate = localStorage.getItem('g_lastBoostDate') || '';
         } catch(e) { console.warn(e); }
 
-        // ---------- الترجمة الكاملة ----------
         const translations = {
             ar: {
                 wallet: "🏦 المحفظة", tokens: "GDAFi TOKENS", title: "COIN GDDAFI",
@@ -297,7 +461,6 @@
             }
         };
 
-        // تحديث واجهة المستخدم (الأرقام والنصوص)
         function updateUI() {
             document.getElementById('balDisplay').innerText = balance.toFixed(6);
             document.getElementById('bLeft').innerText = bCount;
@@ -307,12 +470,10 @@
                 const statusText = isMining ? t.miningActive : t.miningInactive;
                 document.getElementById('mStatus').innerHTML = t.miningStatus + '<br><small style="color:#ffaa00;">' + statusText + '</small>';
                 document.getElementById('boostBtn').innerHTML = t.boost + ' (<span id="bLeft">' + bCount + '</span>/7)';
-                // إعادة ربط الـ span المحدث (ليس ضروريًا لكن للتوافق)
                 document.getElementById('bLeft').innerText = bCount;
             }
         }
 
-        // حفظ البيانات في localStorage
         function saveData() {
             try {
                 localStorage.setItem('g_bal', balance.toFixed(6));
@@ -322,7 +483,6 @@
             } catch(e) { console.warn(e); }
         }
 
-        // إعادة تعيين التعزيزات يومياً (يتم فحصها كل دقيقة)
         function checkDailyReset() {
             const today = new Date().toDateString();
             if (lastBoostDate !== today) {
@@ -330,12 +490,9 @@
                 lastBoostDate = today;
                 saveData();
                 updateUI();
-                // إشعار المستخدم (اختياري)
-                // tg.showAlert("تم تجديد التعزيزات اليومية!");
             }
         }
 
-        // النقر على العملة
         function manualTap() {
             balance += 0.0001;
             if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
@@ -343,7 +500,6 @@
             saveData();
         }
 
-        // تشغيل/إيقاف التعدين
         function toggleMining() {
             if (!isMining) {
                 tg.showConfirm("⚠️ هل تريد بدء التعدين السحابي؟ سيتم إضافة 1 عملة كل 24 ساعة.", (confirmed) => {
@@ -366,7 +522,6 @@
             }
         }
 
-        // استخدام التعزيز
         function doBoost() {
             if (bCount > 0) {
                 balance += 0.005;
@@ -380,16 +535,13 @@
             }
         }
 
-        // دعوة الأصدقاء (رابط صحيح)
         function doInviteFriends() {
             const botUser = "GddaFiPlay_bot";
             const shareText = encodeURIComponent("🔥 انضم إلي في تعدين عملة القذافي واربح عملات مجانية! 🔥");
-            // الرابط المثالي: يفتح نافذة المشاركة مع رابط إحالة
             const inviteLink = `https://t.me/share/url?url=https://t.me/${botUser}?start=ref_${Math.floor(Date.now() / 1000)}&text=${shareText}`;
             tg.openTelegramLink(inviteLink);
         }
 
-        // تغيير اللغة
         function changeLang() {
             const l = document.getElementById('langSelect').value;
             const t = translations[l];
@@ -403,18 +555,16 @@
             document.getElementById('nav-mine').innerText = t.mining;
             document.getElementById('nav-tasks').innerText = t.tasks;
             document.getElementById('nav-friends').innerText = t.friends;
-            updateUI(); // لتحديث زر التعزيز وحالة التعدين
+            updateUI();
         }
 
-        // ---------- حلقة التعدين التلقائي (كل ثانية) ----------
         let lastTimestamp = Date.now();
         setInterval(() => {
             if (isMining) {
                 const now = Date.now();
                 const secondsPassed = (now - lastTimestamp) / 1000;
-                if (secondsPassed > 0 && secondsPassed < 5) { // تجنب القفزات الكبيرة
-                    const increment = (1 / 86400) * secondsPassed;
-                    balance += increment;
+                if (secondsPassed > 0 && secondsPassed < 5) {
+                    balance += (1 / 86400) * secondsPassed;
                     updateUI();
                     saveData();
                 }
@@ -424,12 +574,10 @@
             }
         }, 1000);
 
-        // فحص إعادة التعزيزات كل دقيقة (للتأكد من التحديث إذا ظل المستخدم مفتوحًا)
         setInterval(() => {
             checkDailyReset();
         }, 60000);
 
-        // ---------- ربط الأحداث ----------
         document.getElementById('coinImg').addEventListener('click', manualTap);
         document.getElementById('mBtn').addEventListener('click', toggleMining);
         document.getElementById('boostBtn').addEventListener('click', doBoost);
@@ -437,7 +585,6 @@
         document.getElementById('langSelect').addEventListener('change', changeLang);
         document.getElementById('txt-wallet').addEventListener('click', () => tg.showAlert("🔧 قريباً: ربط المحفظة الحقيقية"));
 
-        // الأزرار السفلية
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -445,10 +592,8 @@
                 if (tab === 'friends') {
                     doInviteFriends();
                 } else if (tab === 'home') {
-                    // إزالة النشاط عن الكل وإضافته للرئيسية
                     navLinks.forEach(l => l.classList.remove('active'));
                     btn.classList.add('active');
-                    // يمكن إضافة تمرير للأعلى إذا أردت
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
                     tg.showAlert("✨ قريباً في التحديث القادم!");
@@ -456,14 +601,14 @@
             });
         });
 
-        // تنفيذ الفحص الأولي وتحديث الواجهة
         checkDailyReset();
         updateUI();
-        changeLang(); // تطبيق اللغة الافتراضية
+        changeLang();
+        updateSoundButton();
 
-        // إضافة حدث للخروج من التطبيق (حفظ نهائي)
         window.addEventListener('beforeunload', () => {
             saveData();
+            if (audioCtx) audioCtx.close();
         });
     })();
 </script>
