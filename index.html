@@ -3,117 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GddaFi Play - Pro Edition</title>
+    <title>GddaFi Play - International Edition</title>
     <style>
         :root { --bg: #05000a; --gold: #ffd700; --purple: #8a2be2; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 50px; }
-        .header { width: 100%; padding: 20px; display: flex; justify-content: space-around; }
-        .btn-top { background: rgba(138, 43, 226, 0.2); border: 1px solid var(--purple); color: white; padding: 10px 20px; border-radius: 15px; cursor: pointer; font-weight: bold; }
-        .counter { font-size: 3rem; font-weight: bold; color: var(--gold); text-shadow: 0 0 20px var(--gold); margin: 20px 0; }
-        .coin-box { width: 250px; height: 250px; position: relative; margin: 20px 0; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 50px; transition: 0.3s; }
+        
+        .header { width: 100%; padding: 15px; display: flex; justify-content: space-around; align-items: center; background: rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 100; }
+        
+        .lang-select { background: var(--purple); color: white; border: 1px solid var(--gold); padding: 5px 10px; border-radius: 10px; font-size: 14px; cursor: pointer; }
+        
+        .btn-top { background: rgba(138, 43, 226, 0.2); border: 1px solid var(--purple); color: white; padding: 10px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+        
+        .counter { font-size: 3.5rem; font-weight: bold; color: var(--gold); text-shadow: 0 0 25px var(--gold); margin: 30px 0; font-family: 'Courier New', monospace; }
+        
+        .coin-box { width: 260px; height: 260px; position: relative; margin: 20px 0; perspective: 1000px; }
+        
         .gold-coin { 
             width: 100%; height: 100%; border-radius: 50%; 
-            background: url('https://githubusercontent.com') center/cover; 
-            border: 4px solid #b8860b; box-shadow: 0 0 40px var(--gold);
-            cursor: pointer; transition: transform 0.1s;
+            background: url('https://oaiusercontent.com') center/cover; 
+            border: 5px solid #b8860b; box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
+            cursor: pointer; transition: transform 0.1s; animation: rotateCoin 10s linear infinite;
         }
-        .gold-coin:active { transform: scale(0.95); }
-        .main-controls { display: flex; flex-direction: column; gap: 15px; width: 80%; }
-        .action-btn { background: linear-gradient(45deg, #4b0082, #8a2be2); border: none; color: white; padding: 15px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .info-text { font-size: 0.9rem; color: #aaa; margin-top: -10px; }
+        @keyframes rotateCoin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        .gold-coin:active { transform: scale(0.9) rotateY(180deg); }
+
+        .main-controls { display: flex; flex-direction: column; gap: 15px; width: 85%; max-width: 400px; }
+        
+        .action-btn { background: linear-gradient(45deg, #4b0082, #8a2be2); border: 2px solid var(--gold); color: white; padding: 18px; border-radius: 40px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .action-btn:active { transform: scale(0.95); background: var(--purple); }
+        
+        .info-text { font-size: 0.85rem; color: #ccc; margin-top: -10px; font-style: italic; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <button class="btn-top" onclick="alert('السحب قريبآ ⏳')">👛 المحفظة</button>
-        <button class="btn-top" onclick="alert('الإحصائيات قريباً')">📊 الترتيب</button>
+        <select class="lang-select" id="langSelector" onchange="changeLanguage(this.value)">
+            <option value="ar">العربية 🇸🇦</option>
+            <option value="en">English 🇺🇸</option>
+            <option value="zh">中文 🇨🇳</option>
+            <option value="fa">فارسی 🇮🇷</option>
+        </select>
+        <button class="btn-top" id="walletBtn" onclick="showWallet()">👛 المحفظة</button>
     </div>
 
-    <div class="counter" id="balance">0.000</div>
+    <div class="counter" id="balanceDisplay">0.000</div>
 
     <div class="coin-box">
-        <div class="gold-coin" onclick="handleTap()"></div>
+        <div class="gold-coin" onclick="handleCoinClick()"></div>
     </div>
 
     <div class="main-controls">
-        <button class="action-btn" id="mineBtn" onclick="mainMining()">♻️ زر التعدين الرئيسي</button>
-        <p class="info-text" id="mineTime">متاح الآن (+1 عملة)</p>
+        <button class="action-btn" id="mineBtn" onclick="handleMainMining()">♻️ زر التعدين الرئيسي</button>
+        <p class="info-text" id="mineStatus">متاح الآن (+1 عملة)</p>
 
-        <button class="action-btn" id="boostBtn" onclick="boostMining()">⚡ زر التعزيز (<span id="boostLeft">7</span>/7)</button>
-        <p class="info-text">يعطيك 0.005 لكل تعزيز</p>
+        <button class="action-btn" id="boostBtn" onclick="handleBoost()">⚡ زر التعزيز (<span id="boostsLeft">7</span>/7)</button>
+        <p class="info-text" id="boostStatus">يعطيك 0.005 لكل تعزيز</p>
 
-        <button class="action-btn" onclick="inviteFriend()">👥 إحالة صديق (+0.005)</button>
+        <button class="action-btn" id="inviteBtn" onclick="handleInvite()">👥 إحالة الأصدقاء (+0.005)</button>
     </div>
 
     <script>
-        let balance = parseFloat(localStorage.getItem('g_bal')) || 0;
-        let lastMine = localStorage.getItem('g_lastMine') || 0;
-        let boostCount = parseInt(localStorage.getItem('g_boostCount')) || 7;
-        let lastBoostReset = localStorage.getItem('g_lastBoostReset') || Date.now();
+        // البيانات والترجمات
+        const translations = {
+            ar: { wallet: "👛 المحفظة", walletMsg: "السحب قريبآ ⏳", mine: "♻️ زر التعدين الرئيسي", mineAvailable: "متاح الآن (+1 عملة)", mineWait: "عد بعد 24 ساعة", boost: "⚡ زر التعزيز", boostInfo: "يعطيك 0.005 لكل تعزيز", invite: "👥 إحالة الأصدقاء (+0.005)", success: "تم بنجاح!", limit: "عذراً، انتظر التجديد" },
+            en: { wallet: "👛 Wallet", walletMsg: "Withdrawal soon ⏳", mine: "♻️ Main Mining", mineAvailable: "Available (+1 Coin)", mineWait: "Return in 24h", boost: "⚡ Boost Button", boostInfo: "Gives 0.005 per boost", invite: "👥 Invite Friends (+0.005)", success: "Success!", limit: "Limit reached, wait 24h" },
+            zh: { wallet: "👛 钱包", walletMsg: "即将提现 ⏳", mine: "♻️ 主挖掘", mineAvailable: "现在可用 (+1 币)", mineWait: "24小时后再回来", boost: "⚡ 加速按钮", boostInfo: "每次加速获得 0.005", invite: "👥 邀请朋友 (+0.005)", success: "成功！", limit: "达到限制，等24小时" },
+            fa: { wallet: "👛 کیف پول", walletMsg: "برداشت به زودی ⏳", mine: "♻️ استخراج اصلی", mineAvailable: "در دسترس (+1 سکه)", mineWait: "24 ساعت دیگر برگردید", boost: "⚡ دکمه تقویت", boostInfo: "0.005 برای هر تقویت", invite: "👥 ارجاع دوستان (+0.005)", success: "موفقیت‌آمیز بود!", limit: "محدودیت تمام شد" }
+        };
 
-        // تحديث الواجهة
+        let currentLang = localStorage.getItem('g_lang') || 'ar';
+        let balance = parseFloat(localStorage.getItem('g_bal')) || 0;
+        let lastMineTime = parseInt(localStorage.getItem('g_lastMine')) || 0;
+        let boostCount = parseInt(localStorage.getItem('g_boosts')) || 7;
+        let lastBoostReset = parseInt(localStorage.getItem('g_boostReset')) || Date.now();
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('g_lang', lang);
+            updateUI();
+        }
+
         function updateUI() {
-            document.getElementById('balance').innerText = balance.toFixed(3);
-            document.getElementById('boostLeft').innerText = boostCount;
+            const t = translations[currentLang];
+            document.getElementById('walletBtn').innerText = t.wallet;
+            document.getElementById('mineBtn').innerText = t.mine;
+            document.getElementById('boostBtn').innerHTML = `${t.boost} (<span id="boostsLeft">${boostCount}</span>/7)`;
+            document.getElementById('boostStatus').innerText = t.boostInfo;
+            document.getElementById('inviteBtn').innerText = t.invite;
+            document.getElementById('balanceDisplay').innerText = balance.toFixed(3);
             
-            let now = Date.now();
-            if (now - lastMine < 86400000) {
+            const now = Date.now();
+            if (now - lastMineTime < 86400000) {
                 document.getElementById('mineBtn').style.opacity = "0.5";
-                document.getElementById('mineTime').innerText = "عد بعد 24 ساعة";
+                document.getElementById('mineStatus').innerText = t.mineWait;
             } else {
                 document.getElementById('mineBtn').style.opacity = "1";
-                document.getElementById('mineTime').innerText = "متاح الآن (+1 عملة)";
+                document.getElementById('mineStatus').innerText = t.mineAvailable;
             }
         }
 
-        // التعدين الرئيسي (مرة كل 24 ساعة)
-        function mainMining() {
-            let now = Date.now();
-            if (now - lastMine >= 86400000) {
+        function showWallet() { alert(translations[currentLang].walletMsg); }
+
+        function handleMainMining() {
+            const now = Date.now();
+            if (now - lastMineTime >= 86400000) {
                 balance += 1;
-                lastMine = now;
-                localStorage.setItem('g_bal', balance);
-                localStorage.setItem('g_lastMine', lastMine);
-                alert("تم استلام 1 عملة بنجاح! 🎉");
+                lastMineTime = now;
+                saveData();
+                alert(translations[currentLang].success);
                 updateUI();
             } else {
-                alert("عذراً، يمكنك التعدين مرة واحدة كل 24 ساعة.");
+                alert(translations[currentLang].mineWait);
             }
         }
 
-        // زر التعزيز (7 مرات كل 24 ساعة)
-        function boostMining() {
-            let now = Date.now();
-            if (now - lastBoostReset >= 86400000) {
-                boostCount = 7;
-                lastBoostReset = now;
-            }
-
+        function handleBoost() {
+            const now = Date.now();
+            if (now - lastBoostReset >= 86400000) { boostCount = 7; lastBoostReset = now; }
             if (boostCount > 0) {
                 balance += 0.005;
                 boostCount--;
-                localStorage.setItem('g_bal', balance);
-                localStorage.setItem('g_boostCount', boostCount);
-                localStorage.setItem('g_lastBoostReset', lastBoostReset);
+                saveData();
                 updateUI();
             } else {
-                alert("نفدت التعزيزات! انتظر التجديد غداً.");
+                alert(translations[currentLang].limit);
             }
         }
 
-        // إحالة صديق
-        function inviteFriend() {
-            // في البوت الحقيقي، تليجرام سيعرف إذا كانت الإحالة ناجحة عبر رابط الإحالة
-            const botUser = "GddaFiPlay_bot"; 
-            const inviteLink = `https://t.me{botUser}?start=ref${Math.floor(Math.random()*10000)}`;
-            const text = encodeURIComponent(`ابدأ تعدين عملة القذافي معي واربح! 💰\n${inviteLink}`);
+        function handleInvite() {
+            const inviteLink = `https://t.me{Math.floor(Math.random()*9999)}`;
+            const text = encodeURIComponent(`GddaFi Play 💰\n${inviteLink}`);
             window.open(`https://t.me{inviteLink}&text=${text}`);
-            
-            // تنبيه للمستخدم بخصوص المكافأة
-            alert("شارك الرابط! ستحصل على 0.005 عند انضمام صديق جديد عبرك.");
         }
 
+        function handleCoinClick() { /* ميزة النقر السريع الإضافية لإظهار التفاعل */ }
+
+        function saveData() {
+            localStorage.setItem('g_bal', balance);
+            localStorage.setItem('g_lastMine', lastMineTime);
+            localStorage.setItem('g_boosts', boostCount);
+            localStorage.setItem('g_boostReset', lastBoostReset);
+        }
+
+        // تشغيل اللغة المختارة عند التحميل
+        document.getElementById('langSelector').value = currentLang;
         updateUI();
     </script>
 </body>
