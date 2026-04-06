@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Play - Global Pro</title>
-    <!-- مكتبة تليجرام الرسمية لحل مشكلة الإحالة -->
+    <title>GddaFi Play - Fixed Pro</title>
+    <!-- ✅ مكتبة تليجرام الرسمية -->
     <script src="https://telegram.org"></script>
-    <!-- كود أرباح Adsterra -->
+    <!-- ✅ كود أرباح Adsterra -->
     <script src="https://profitablecpmratenetwork.com"></script>
     <style>
         :root { --gold: #ffd700; --royal: #b8860b; }
@@ -16,7 +16,7 @@
         .counter-section { margin-top: 5px; text-align: center; }
         .counter { font-size: 3.5rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 25px gold; line-height: 1.1; }
         .currency { font-size: 0.8rem; color: #888; letter-spacing: 2px; margin-top: 5px; }
-        .coin-box { width: 190px; height: 190px; margin: 15px auto; perspective: 1000px; }
+        .coin-box { width: 180px; height: 180px; margin: 10px auto; perspective: 1000px; }
         .gold-coin { width: 100%; height: 100%; border-radius: 50%; background: url('coin.png') center/cover no-repeat; border: 4px solid var(--royal); box-shadow: 0 0 35px rgba(138, 43, 226, 0.4); animation: rotateY 15s linear infinite; }
         @keyframes rotateY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
         .fakhama-title { font-size: 1.3rem; font-weight: bold; color: var(--gold); margin: 5px 0; letter-spacing: 3px; }
@@ -30,8 +30,8 @@
 <body>
 
 <div class="header">
-    <button class="wallet-btn" id="wBtn" onclick="showWalletMsg()">🏦 المحفظة</button>
-    <select id="langSelect" onchange="changeLang(this.value)" style="background:#000; color:gold; border:1px solid gold; font-size:12px; border-radius:5px; padding:2px;">
+    <button class="wallet-btn" id="wBtn" onclick="alert(t[cur].wMsg)">🏦 المحفظة</button>
+    <select id="langSelect" onchange="changeLang(this.value)" style="background:#000; color:gold; border:1px solid gold; font-size:12px; border-radius:5px;">
         <option value="ar">العربية 🇸🇦</option>
         <option value="en">English 🇺🇸</option>
         <option value="zh">中文 🇨🇳</option>
@@ -56,10 +56,10 @@
 </div>
 
 <div class="nav-bar">
-    <div class="nav-item" style="color:gold">🏠 <span id="navHome">الرئيسية</span></div>
-    <div class="nav-item" onclick="alert('Soon')">⛏️ <span id="navMine">تعدين</span></div>
-    <div class="nav-item" onclick="alert('Soon')">📋 <span id="navTasks">مهام</span></div>
-    <div class="nav-item" onclick="doInvite()">👥 <span id="navFriends">أصدقاء</span></div>
+    <div class="nav-item" style="color:gold" id="nH">🏠 الرئيسية</div>
+    <div class="nav-item" onclick="alert('Soon')" id="nM">⛏️ تعدين</div>
+    <div class="nav-item" onclick="alert('Soon')" id="nT">📋 مهام</div>
+    <div class="nav-item" onclick="doInvite()" id="nF">👥 أصدقاء</div>
 </div>
 
 <script>
@@ -67,10 +67,10 @@
     tg.expand();
 
     const t = {
-        ar: { w: "🏦 المحفظة", wMsg: "السحب قريبآ ⏳", m: "تعدين رئيسي", mS: "جاري التعدين... ⛏️", mA: "+1 عملة كل 24 ساعة", b: "تعزيز", bS: "0.005 لكل تعزيز", i: "إحالة صديق", s: "بدأ التعدين! 🚀", nH: "الرئيسية", nM: "تعدين", nT: "مهام", nF: "أصدقاء" },
-        en: { w: "🏦 Wallet", wMsg: "Withdrawal soon ⏳", m: "Main Mine", mS: "Mining... ⛏️", mA: "+1 coin every 24h", b: "Boost", bS: "0.005 per boost", i: "Invite Friend", s: "Mining Started! 🚀", nH: "Home", nM: "Mine", nT: "Tasks", nF: "Friends" },
-        zh: { w: "🏦 钱包", wMsg: "即将提现 ⏳", m: "主挖掘", mS: "挖掘中... ⛏️", mA: "每24小时+1币", b: "加速", bS: "每次+0.005", i: "邀请朋友", s: "开始挖掘! 🚀", nH: "首页", nM: "挖掘", nT: "任务", nF: "朋友" },
-        fa: { w: "🏦 کیف پول", wMsg: "برداشت به زودی ⏳", m: "استخراج اصلی", mS: "در حال استخراج... ⛏️", mA: "+1 سکه هر 24 ساعت", b: "تقویت", bS: "0.005 برای هر تقویت", i: "ارجاع دوستان", s: "استخراج شروع شد! 🚀", nH: "خانه", nM: "استخراج", nT: "وظایف", nF: "دوستان" }
+        ar: { w: "🏦 المحفظة", wMsg: "السحب قريبآ ⏳", m: "تعدين رئيسي", mS: "جاري التعدين... ⛏️", mA: "+1 عملة كل 24 ساعة", b: "تعزيز", bS: "0.005 لكل تعزيز", i: "إحالة صديق (+0.005)", s: "بدأ التعدين! 🚀", nH: "🏠 الرئيسية", nM: "⛏️ تعدين", nT: "📋 مهام", nF: "👥 أصدقاء" },
+        en: { w: "🏦 Wallet", wMsg: "Withdrawal soon ⏳", m: "Main Mine", mS: "Mining... ⛏️", mA: "+1 coin every 24h", b: "Boost", bS: "0.005 per boost", i: "Invite Friend (+0.005)", s: "Mining Started! 🚀", nH: "🏠 Home", nM: "⛏️ Mine", nT: "📋 Tasks", nF: "👥 Friends" },
+        zh: { w: "🏦 钱包", wMsg: "即将提现 ⏳", m: "主挖掘", mS: "挖掘中... ⛏️", mA: "每24小时+1币", b: "加速", bS: "每次+0.005", i: "邀请朋友 (+0.005)", s: "开始挖掘! 🚀", nH: "🏠 首页", nM: "⛏️ 挖掘", nT: "📋 任务", nF: "👥 朋友" },
+        fa: { w: "🏦 کیف پول", wMsg: "برداشت به زودی ⏳", m: "استخراج اصلی", mS: "در حال استخراج... ⛏️", mA: "+1 سکه هر 24 ساعت", b: "تقویت", bS: "0.005 برای هر تقویت", i: "ارجاع دوستان (+0.005)", s: "استخراج شروع شد! 🚀", nH: "🏠 خانه", nM: "⛏️ استخراج", nT: "📋 وظایف", nF: "👥 دوستان" }
     };
 
     let cur = localStorage.getItem('g_lang') || 'ar';
@@ -80,8 +80,11 @@
     let bLeft = parseInt(localStorage.getItem('g_bL')) ?? 7;
     let bReset = parseInt(localStorage.getItem('g_bR')) || Date.now();
 
-    function changeLang(lang) { cur = lang; localStorage.setItem('g_lang', lang); updateUI(); }
-    function showWalletMsg() { alert(t[cur].wMsg); }
+    function changeLang(lang) {
+        cur = lang;
+        localStorage.setItem('g_lang', lang);
+        updateUI();
+    }
 
     function updateUI() {
         const item = t[cur];
@@ -90,14 +93,21 @@
         document.getElementById('bBtn').innerHTML = `${item.b} (<span id="bLeft">${bLeft}</span>/7)`;
         document.getElementById('bStatus').innerText = item.bS;
         document.getElementById('iBtn').innerText = item.i;
-        document.getElementById('navHome').innerText = item.nH;
-        document.getElementById('navMine').innerText = item.nM;
-        document.getElementById('navTasks').innerText = item.nT;
-        document.getElementById('navFriends').innerText = item.nF;
+        document.getElementById('nH').innerText = item.nH;
+        document.getElementById('nM').innerText = item.nM;
+        document.getElementById('nT').innerText = item.nT;
+        document.getElementById('nF').innerText = item.nF;
         document.getElementById('langSelect').value = cur;
     }
 
-    function startMining() { if (!isMining) { isMining = true; mineStart = Date.now(); save(); alert(t[cur].s); } }
+    function startMining() {
+        if (!isMining) {
+            isMining = true;
+            mineStart = Date.now();
+            save();
+            alert(t[cur].s);
+        }
+    }
 
     setInterval(() => {
         if (Date.now() - bReset > 86400000) { bLeft = 7; bReset = Date.now(); save(); }
@@ -123,8 +133,8 @@
     }
 
     function doInvite() {
-        const shareUrl = `https://t.me{encodeURIComponent(cur === 'ar' ? "انضم إلي في تعدين عملة القذافي واربح! 💰" : "Join me in mining GddaFi Coin! 💰")}`;
-        tg.openTelegramLink(shareUrl);
+        const shareLink = `https://t.me{encodeURIComponent(cur === 'ar' ? "انضم إلي في تعدين عملة القذافي واربح! 💰" : "Join me in mining GddaFi Coin! 💰")}`;
+        tg.openTelegramLink(shareLink);
     }
 
     function save() {
@@ -133,6 +143,7 @@
         localStorage.setItem('g_bR', bReset);
     }
 
+    // ✅ تشغيل التحديث فور التحميل
     updateUI();
 </script>
 </body>
