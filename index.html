@@ -4,152 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GddaFi Play Official</title>
-    
-    <!-- ✅ الرابط الصحيح والكامل لمكتبة تليجرام -->
     <script src="https://telegram.org"></script>
-    
     <style>
         :root { --gold: #ffd700; --bg: #05000a; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
         
-        body { 
-            background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; 
-            margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; 
-            height: 100vh; overflow: hidden;
-        }
-
-        .header { margin-top: 30px; text-align: center; z-index: 10; }
-        #bal { font-size: 3.5rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 15px gold; line-height: 1; }
-        .currency-label { color: #666; font-size: 0.8rem; letter-spacing: 2px; margin-top: 5px; }
-
-        /* حاوية الصورة والحركة */
+        .header { width: 92%; display: flex; justify-content: space-between; align-items: center; margin-top: 20px; z-index: 100; }
+        .lang-select { background: #111; color: var(--gold); border: 1px solid var(--gold); border-radius: 8px; padding: 5px; font-size: 0.8rem; }
+        
+        .counter-box { text-align: center; margin-top: 10px; }
+        #bal { font-size: 3.8rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 20px gold; }
+        
         .image-box { width: 270px; height: 270px; margin: 25px auto; position: relative; }
-        .coin-img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255,215,0,0.3)); }
-        .rotate { animation: spin 20s linear infinite; }
+        .coin-img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255,215,0,0.4)); border-radius: 50%; }
+        .rotate { animation: spin 15s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* شبكة الأزرار المحسنة */
-        .grid-buttons { 
-            display: grid; grid-template-columns: 1fr 1fr; 
-            gap: 12px; width: 92%; padding-bottom: 30px; /* مساحة أمان للأسفل */
-            z-index: 20;
-        }
-        
-        .btn-action { 
-            background: #111; border: 2px solid var(--gold); color: var(--gold); 
-            padding: 16px 10px; border-radius: 12px; font-weight: bold; 
-            cursor: pointer; font-size: 0.95rem; text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            display: block; width: 100%;
-        }
-
-        .btn-action:active { background: var(--gold); color: #000; transform: scale(0.96); }
-
-        .info-text { margin-top: 10px; color: #888; font-size: 0.75rem; text-align: center; }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 92%; margin-top: 5px; }
+        .btn-action { background: #111; border: 2px solid var(--gold); color: var(--gold); padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.9rem; text-align: center; }
+        .btn-action:active { background: var(--gold); color: #000; transform: scale(0.95); }
+        .status { margin-top: 20px; color: #888; font-size: 0.75rem; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="header">
+    <button class="btn-action" style="padding: 5px 12px; border-radius: 8px;" onclick="showWallet()">🏦 <span id="txt-w">المحفظة</span></button>
+    <select class="lang-select" id="langSel" onchange="changeLang(this.value)">
+        <option value="ar">العربية 🇸🇦</option>
+        <option value="en">English 🇺🇸</option>
+        <option value="zh">中文 🇨🇳</option>
+        <option value="fa">فارسی 🇮🇷</option>
+    </select>
+</div>
+
+<div class="counter-box">
     <div id="bal">0.000000</div>
-    <div class="currency-label">GDAFi TOKENS</div>
+    <div style="color:#666; font-size:0.8rem; letter-spacing: 2px;">GDAFi TOKENS</div>
 </div>
 
 <div class="image-box">
     <img src="coin.png" id="mainCoin" class="coin-img" alt="GddaFi">
 </div>
 
-<div class="grid-buttons">
-    <button class="btn-action" id="mBtn" onclick="startMining()">⛏️ ابدأ التعدين</button>
-    <button class="btn-action" id="bBtn" onclick="useBoost()">⚡ تعزيز (7/7)</button>
-    <button class="btn-action" onclick="openWallet()">🏦 المحفظة</button>
-    <button class="btn-action" onclick="shareApp()">👥 إحالة صديق</button>
+<div class="controls">
+    <button class="btn-action" id="mineBtn" onclick="startMining()">⛏️ <span id="txt-m">ابدأ التعدين</span></button>
+    <button class="btn-action" id="boostBtn" onclick="doBoost()">⚡ <span id="txt-b">تعزيز</span> (7/7)</button>
+    <button class="btn-action" id="inviteBtn" onclick="inviteFriends()">👥 <span id="txt-i">إحالة صديق</span></button>
+    <button class="btn-action" onclick="showWallet()">💰 USDT/TRC20</button>
 </div>
 
-<div class="info-text" id="statusMsg">انقر على "ابدأ التعدين" لتنشيط العداد</div>
+<div class="status" id="stMsg">انقر على "ابدأ التعدين" لتنشيط العداد</div>
 
 <script>
-    // 1. تعريف المتغيرات أولاً
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const DICT = {
+        ar: { w: "المحفظة", m: "ابدأ التعدين", ms: "جاري التعدين..", b: "تعزيز", i: "إحالة صديق", alertM: "بدأ التعدين! 🚀", alertW: "السحب قريبآ USDT/TRC20 ⏳", st: "انقر على ابدأ التعدين لتنشيط العداد", stActive: "التعدين نشط (1 عملة / 24 ساعة)" },
+        en: { w: "Wallet", m: "Start Mine", ms: "Mining..", b: "Boost", i: "Invite Friend", alertM: "Mining Started! 🚀", alertW: "Withdrawal soon USDT/TRC20 ⏳", st: "Click Start Mine to activate", stActive: "Mining Active (1 Coin / 24h)" },
+        zh: { w: "钱包", m: "开始挖掘", ms: "挖掘中..", b: "加速", i: "邀请朋友", alertM: "挖掘开始！🚀", alertW: "即将提现 USDT/TRC20 ⏳", st: "点击开始挖掘以激活", stActive: "挖掘进行中 (1币/24小时)" },
+        fa: { w: "کیف پول", m: "شروع استخراج", ms: "در حال استخراج..", b: "تقویت", i: "ارجاع دوستان", alertM: "استخراج شروع شد! 🚀", alertW: "برداشت به زودی USDT/TRC20 ⏳", st: "برای فعال سازی روی شروع استخراج کلیک کنید", stActive: "استخراج فعال است (1 سکه / 24 ساعت)" }
+    };
+
     let balance = parseFloat(localStorage.getItem('g_b')) || 0;
     let bLeft = parseInt(localStorage.getItem('g_bl')) ?? 7;
     let isMining = localStorage.getItem('g_im') === 'true';
+    let CUR = localStorage.getItem('g_l') || 'ar';
     let bReset = parseInt(localStorage.getItem('g_br')) || Date.now();
 
-    // 2. دالة تحديث الواجهة
-    function refreshUI() {
+    function changeLang(val) { CUR = val; localStorage.setItem('g_l', val); updateView(); }
+
+    function updateView() {
+        const d = DICT[CUR];
         document.getElementById('bal').innerText = balance.toFixed(6);
-        document.getElementById('bBtn').innerText = `⚡ تعزيز (${bLeft}/7)`;
-        
-        if (isMining) {
-            document.getElementById('mainCoin').classList.add('rotate');
-            document.getElementById('mBtn').innerText = "جاري التعدين..";
-            document.getElementById('statusMsg').innerText = "التعدين نشط (1 عملة / 24 ساعة)";
-        }
+        document.getElementById('txt-w').innerText = d.w;
+        document.getElementById('txt-m').innerText = isMining ? d.ms : d.m;
+        document.getElementById('txt-b').innerText = d.b;
+        document.getElementById('boostBtn').innerHTML = `⚡ <span id="txt-b">${d.b}</span> (${bLeft}/7)`;
+        document.getElementById('txt-i').innerText = d.i;
+        document.getElementById('stMsg').innerText = isMining ? d.stActive : d.st;
+        document.getElementById('langSel').value = CUR;
+        if (isMining) document.getElementById('mainCoin').classList.add('rotate');
     }
 
-    // 3. وظائف الأزرار الأساسية
     function startMining() {
         if (!isMining) {
             isMining = true;
-            if(window.Telegram.WebApp.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
-            window.Telegram.WebApp.showAlert("بدأت عملية التعدين بنجاح! 🚀");
-            saveData();
-            refreshUI();
+            tg.HapticFeedback.notificationOccurred('success');
+            tg.showAlert(DICT[CUR].alertM);
+            save(); updateView();
         }
     }
 
-    function useBoost() {
+    function doBoost() {
         if (bLeft > 0) {
-            balance += 0.005;
-            bLeft--;
-            if(window.Telegram.WebApp.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-            saveData();
-            refreshUI();
-        } else {
-            window.Telegram.WebApp.showAlert("انتهت تعزيزات اليوم (7/7)");
-        }
+            balance += 0.005; bLeft--;
+            tg.HapticFeedback.impactOccurred('medium');
+            save(); updateView();
+        } else { tg.showAlert(CUR === 'ar' ? "انتهت تعزيزات اليوم" : "No boosts left today"); }
     }
 
-    function openWallet() {
-        window.Telegram.WebApp.showAlert("السحب قريباً عبر شبكة USDT/TRC20 ⏳");
+    function showWallet() { tg.showAlert(DICT[CUR].alertW); }
+
+    function inviteFriends() {
+        const link = "https://t.me" + encodeURIComponent(DICT[CUR].i);
+        tg.openTelegramLink(link);
     }
 
-    function shareApp() {
-        const inviteLink = "https://t.me" + encodeURIComponent("انضم إلي في تعدين عملة GddaFi واربح! 💰");
-        window.Telegram.WebApp.openTelegramLink(inviteLink);
-    }
-
-    function saveData() {
+    function save() {
         localStorage.setItem('g_b', balance);
         localStorage.setItem('g_bl', bLeft);
         localStorage.setItem('g_im', isMining);
         localStorage.setItem('g_br', bReset);
     }
 
-    // 4. المحرك الزمني (التعدين البطيء)
     setInterval(() => {
-        // تصفير التعزيزات كل 24 ساعة
-        if (Date.now() - bReset > 86400000) {
-            bLeft = 7; bReset = Date.now(); saveData();
-        }
-        if (isMining) {
-            balance += (1 / 86400); 
-            document.getElementById('bal').innerText = balance.toFixed(6);
-            // حفظ دوري كل دقيقة بدلاً من كل ثانية لتحسين الأداء
-        }
+        if (Date.now() - bReset > 86400000) { bLeft = 7; bReset = Date.now(); save(); }
+        if (isMining) { balance += (1 / 86400); document.getElementById('bal').innerText = balance.toFixed(6); }
     }, 1000);
 
-    // حفظ الرصيد كل 10 ثوانٍ تلقائياً
-    setInterval(saveData, 10000);
-
-    // 5. تهيئة تليجرام عند اكتمال التحميل
-    window.onload = () => {
-        const tg = window.Telegram.WebApp;
-        tg.expand(); // تمديد البوت لكامل الشاشة
-        tg.ready();
-        refreshUI();
-    };
+    window.onload = updateView;
 </script>
-
 </body>
 </html>
