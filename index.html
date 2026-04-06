@@ -1,58 +1,100 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Play</title>
+    <title>GddaFi Play - Golden Royal Edition</title>
+    
+    <!-- ✅ دمج كود أرباح Adsterra الخاص بك -->
+    <script src="https://pl29042900.profitablecpmratenetwork.com/67/d9/1b/67d91bfab7947c9808641625010d7e0c.js"></script>
+
     <style>
-        body { background: #05000a; color: white; font-family: sans-serif; margin: 0; text-align: center; }
-        .header { display: flex; justify-content: space-between; padding: 15px; background: #1a0033; }
-        .lang-select { background: #8a2be2; color: white; border: 1px solid gold; border-radius: 5px; padding: 5px; }
-        .wallet-btn { background: none; border: 1px solid #8a2be2; color: gold; padding: 5px 15px; border-radius: 10px; cursor: pointer; }
-        .counter { font-size: 3.5rem; color: gold; margin: 25px 0; font-weight: bold; text-shadow: 0 0 20px gold; }
-        .coin-box { width: 240px; height: 240px; margin: 20px auto; position: relative; }
+        :root { --gold: #ffd700; --royal-gold: #b8860b; }
+        
+        body { 
+            background: #05000a; color: white; font-family: 'Segoe UI', sans-serif; 
+            margin: 0; text-align: center; overflow: hidden; height: 100vh;
+            /* ✅ الإطار الذهبي الفخم على أطراف الصفحة */
+            border: 8px double var(--royal-gold);
+            box-sizing: border-box;
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .header { display: flex; justify-content: space-between; padding: 20px; z-index: 10; }
+        
+        .lang-select { background: #1a0033; color: white; border: 1px solid var(--gold); border-radius: 8px; padding: 5px; cursor: pointer; }
+        
+        .wallet-btn { background: rgba(138, 43, 226, 0.2); border: 1.5px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-weight: bold; }
+
+        .counter { font-size: 3.8rem; color: var(--gold); margin: 15px 0; font-weight: bold; text-shadow: 0 0 25px var(--gold); }
+
+        .coin-box { width: 230px; height: 230px; margin: 10px auto; position: relative; }
+        
         .gold-coin { 
             width: 100%; height: 100%; border-radius: 50%; 
             background: url('coin.png') center/cover no-repeat; 
-            border: 4px solid gold; box-shadow: 0 0 30px #8a2be2;
-            transition: transform 0.1s; animation: rotate 15s linear infinite;
+            border: 5px solid var(--royal-gold); box-shadow: 0 0 40px rgba(138, 43, 226, 0.6);
+            transition: 0.1s; animation: rotateY 12s linear infinite;
         }
-        @keyframes rotate { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        @keyframes rotateY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
         .gold-coin:active { transform: scale(0.9); }
-        .btn-group { display: flex; flex-direction: column; gap: 15px; padding: 20px; align-items: center; }
-        .main-btn { background: linear-gradient(to right, #4b0082, #8a2be2); border: 2px solid gold; color: white; width: 90%; padding: 15px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
-        .sub-text { font-size: 0.85rem; color: #bbb; margin-top: -10px; font-style: italic; }
+
+        .btn-group { display: flex; flex-direction: column; gap: 12px; padding: 15px; align-items: center; }
+        
+        .main-btn { 
+            background: linear-gradient(45deg, #2e004f, #8a2be2); 
+            border: 2px solid var(--gold); color: white; width: 85%; 
+            padding: 16px; border-radius: 50px; font-size: 1.2rem; 
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .main-btn:active { transform: scale(0.96); opacity: 0.8; }
+        
+        .sub-text { font-size: 0.85rem; color: #ccc; margin-top: -8px; text-shadow: 1px 1px 2px black; }
+
+        /* زوايا البرواز الذهبي */
+        body::before {
+            content: "✦"; position: absolute; top: 5px; left: 5px; color: var(--gold); font-size: 20px;
+        }
+        body::after {
+            content: "✦"; position: absolute; bottom: 5px; right: 5px; color: var(--gold); font-size: 20px;
+        }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <select class="lang-select" id="lang" onchange="updateLang()">
+    <select class="lang-select" id="lang" onchange="changeLang()">
         <option value="ar">العربية 🇸🇦</option>
         <option value="en">English 🇺🇸</option>
         <option value="zh">中文 🇨🇳</option>
         <option value="fa">فارسی 🇮🇷</option>
     </select>
-    <button class="wallet-btn" onclick="alert(t[cur].wMsg)">👛 <span id="wBtn">المحفظة</span></button>
+    <button class="wallet-btn" onclick="triggerAd(); alert(t[cur].wMsg)">👛 <span id="wBtn">المحفظة</span></button>
 </div>
 
 <div class="counter" id="bal">0.000</div>
 
 <div class="coin-box">
-    <div class="gold-coin"></div>
+    <div class="gold-coin" onclick="handleCoinClick()"></div>
 </div>
 
 <div class="btn-group">
-    <button class="main-btn" id="mBtn" onclick="doMine()">تعدين رئيسي</button>
+    <button class="main-btn" id="mBtn" onclick="triggerAd(); doMine()">تعدين رئيسي</button>
     <p class="sub-text" id="mSub">+1 عملة كل 24 ساعة</p>
     
-    <button class="main-btn" id="bBtn" onclick="doBoost()">تعزيز (<span id="bLeft">7</span>/7)</button>
+    <button class="main-btn" id="bBtn" onclick="triggerAd(); doBoost()">تعزيز (<span id="bLeft">7</span>/7)</button>
     <p class="sub-text" id="bSub">0.005 لكل تعزيز</p>
     
-    <button class="main-btn" id="iBtn" onclick="doInvite()">إحالة صديق (+0.005)</button>
+    <button class="main-btn" id="iBtn" onclick="triggerAd(); doInvite()">إحالة صديق (+0.005)</button>
 </div>
 
 <script>
+    // ✅ وظيفة تشغيل الإعلان عند كل ضغطة
+    function triggerAd() {
+        console.log("Ad Triggered");
+        // الكود المدمج من Adsterra سيتولى الباقي تلقائياً عند التفاعل
+    }
+
     const t = {
         ar: { w: "المحفظة", wMsg: "السحب قريبآ ⏳", m: "تعدين رئيسي", mSub: "+1 عملة كل 24 ساعة", b: "تعزيز", bSub: "0.005 لكل تعزيز", i: "إحالة صديق", s: "تم بنجاح!", l: "انتظر 24 ساعة" },
         en: { w: "Wallet", wMsg: "Withdrawal soon ⏳", m: "Main Mine", mSub: "+1 coin every 24h", b: "Boost", bSub: "0.005 per boost", i: "Invite Friend", s: "Success!", l: "Wait 24h" },
@@ -66,9 +108,13 @@
     let bCount = parseInt(localStorage.getItem('bCount')) || 7;
     let lastBReset = parseInt(localStorage.getItem('lastB')) || Date.now();
 
-    function updateLang() {
+    function changeLang() {
         cur = document.getElementById('lang').value;
         localStorage.setItem('lang', cur);
+        renderLang();
+    }
+
+    function renderLang() {
         document.getElementById('wBtn').innerText = t[cur].w;
         document.getElementById('mBtn').innerText = t[cur].m;
         document.getElementById('mSub').innerText = t[cur].mSub;
@@ -94,6 +140,8 @@
         window.open("https://t.me Play 💰 Join Me!");
     }
 
+    function handleCoinClick() { triggerAd(); }
+
     function save() {
         localStorage.setItem('bal', balance);
         localStorage.setItem('lastM', lastM);
@@ -107,7 +155,7 @@
     }
 
     document.getElementById('lang').value = cur;
-    updateLang(); render();
+    renderLang(); render();
 </script>
 </body>
 </html>
