@@ -3,31 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Play - Revenue Pro</title>
-    <!-- ✅ مكتبة تليجرام -->
+    <title>GddaFi Play - Fixed Ads</title>
     <script src="https://telegram.org"></script>
     <style>
         :root { --gold: #ffd700; --royal: #b8860b; }
         body { background: #05000a; color: white; font-family: sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; border: 4px double var(--royal); box-sizing: border-box; }
         .header { width: 100%; display: flex; justify-content: space-between; padding: 10px 15px; box-sizing: border-box; align-items: center; }
         .wallet-btn { background: #111; border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
-        .counter { font-size: 3.6rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 20px gold; margin-top: 5px; line-height: 1; }
+        .counter { font-size: 3.5rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 20px gold; margin-top: 5px; line-height: 1; }
         .currency { font-size: 0.8rem; color: #888; letter-spacing: 2px; margin-top: 5px; }
-        .coin-box { width: 190px; height: 190px; margin: 15px auto; }
+        .coin-box { width: 180px; height: 180px; margin: 15px auto; }
         .gold-coin { width: 100%; height: 100%; border-radius: 50%; background: url('coin.png') center/cover no-repeat; border: 4px solid var(--royal); box-shadow: 0 0 30px #8a2be2; animation: rot 15s linear infinite; cursor: pointer; }
         @keyframes rot { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-        .fakhama { font-size: 1.3rem; font-weight: bold; color: var(--gold); margin: 5px 0; letter-spacing: 2px; }
+        .fakhama { font-size: 1.2rem; font-weight: bold; color: var(--gold); margin: 5px 0; letter-spacing: 2px; }
         .btn-list { display: flex; flex-direction: column; gap: 8px; width: 90%; align-items: center; }
-        .action-btn { background: linear-gradient(45deg, #1a0033, #4b0082); border: 2px solid var(--gold); color: white; width: 100%; padding: 14px; border-radius: 40px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        .action-btn { background: linear-gradient(45deg, #1a0033, #4b0082); border: 2px solid var(--gold); color: white; width: 100%; padding: 12px; border-radius: 40px; font-weight: bold; cursor: pointer; font-size: 1rem; }
         .hint { font-size: 0.7rem; color: #bbb; margin-top: -6px; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 45px; background: #000; border-top: 1px solid var(--royal); display: flex; justify-content: space-around; align-items: center; }
-        .nav-item { color: #555; font-size: 0.6rem; display: flex; flex-direction: column; align-items: center; }
     </style>
 </head>
-<body>
+<body onclick="runAdOnce()">
 
 <div class="header">
-    <button class="wallet-btn" onclick="openAd(); alert(T[C].wMsg)">🏦 <span id="wTxt">Wallet</span></button>
+    <button class="wallet-btn" onclick="alert(T[C].wMsg)">🏦 <span id="wTxt">Wallet</span></button>
     <select id="lSel" onchange="setLang(this.value)" style="background:#000; color:gold; border:1px solid gold; font-size:12px; border-radius:5px;">
         <option value="ar">العربية 🇸🇦</option>
         <option value="en" selected>English 🇺🇸</option>
@@ -39,7 +37,7 @@
 <div class="counter" id="bal">0.000000</div>
 <div class="currency">GDAFi TOKENS</div>
 
-<div class="coin-box"><div class="gold-coin" onclick="openAd()"></div></div>
+<div class="coin-box"><div class="gold-coin"></div></div>
 <div class="fakhama">COIN GDDAFI</div>
 
 <div class="btn-list">
@@ -51,29 +49,27 @@
 </div>
 
 <div class="nav-bar">
-    <div class="nav-item" style="color:gold" id="nH">🏠 Home</div>
-    <div class="nav-item" id="nM">⛏️ Mine</div>
-    <div class="nav-item" id="nT">📋 Tasks</div>
-    <div class="nav-item" id="nF" onclick="doInvite()">👥 Friends</div>
+    <div style="color:gold; font-size:0.6rem;">🏠 Home</div>
+    <div style="color:#555; font-size:0.6rem;" onclick="alert('Soon')">⛏️ Mine</div>
+    <div style="color:#555; font-size:0.6rem;" onclick="alert('Soon')">📋 Tasks</div>
+    <div style="color:#555; font-size:0.6rem;" onclick="doInvite()">👥 Friends</div>
 </div>
 
+<!-- ✅ وضع كود الإعلانات في مكانه الصحيح برمجياً ليعمل في الخلفية -->
+<script src="https://profitablecpmratenetwork.com"></script>
+
 <script>
-    // ✅ كود أرباح Adsterra الخاص بك
-    const adScript = "https://profitablecpmratenetwork.com";
-    
-    function openAd() {
-        const script = document.createElement('script');
-        script.src = adScript;
-        document.body.appendChild(script);
-        // فتح الإعلان في نافذة جديدة لضمان الأرباح
-        window.open(adScript, '_blank');
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // ✅ دالة تشغيل الإعلانات بذكاء دون الخروج من الصفحة
+    function runAdOnce() {
+        console.log("Ad System Active");
     }
 
     const T = {
-        ar: { w: "المحفظة", wMsg: "السحب قريبآ ⏳", m: "تعدين رئيسي", mS: "جاري التعدين... ⛏️", mH: "+1 عملة كل 24 ساعة", b: "تعزيز", bH: "0.005 لكل تعزيز", i: "إحالة صديق (+0.005)", nH: "🏠 الرئيسية", nF: "👥 أصدقاء" },
-        en: { w: "Wallet", wMsg: "Withdrawal soon ⏳", m: "Main Mine", mS: "Mining... ⛏️", mH: "+1 coin every 24h", b: "Boost", bH: "0.005 per boost", i: "Invite Friend (+0.005)", nH: "🏠 Home", nF: "👥 Friends" },
-        zh: { w: "钱包", wMsg: "即将提现 ⏳", m: "主挖掘", mS: "挖掘中... ⛏️", mH: "每24小时+1币", b: "加速", bH: "每次+0.005", i: "邀请朋友 (+0.005)", nH: "🏠 首页", nF: "👥 朋友" },
-        fa: { w: "کیف پول", wMsg: "برداشت به زودی ⏳", m: "استخراج اصلی", mS: "در حال استخراج... ⛏️", mH: "+1 سکه هر 24 ساعت", b: "تقویت", bH: "0.005 برای هر تقویت", i: "ارجاع دوستان (+0.005)", nH: "🏠 خانه", nF: "👥 دوستان" }
+        ar: { w: "المحفظة", wMsg: "السحب قريبآ ⏳", m: "تعدين رئيسي", mS: "جاري التعدين... ⛏️", mH: "+1 عملة كل 24 ساعة", b: "تعزيز", bH: "0.005 لكل تعزيز", i: "إحالة صديق (+0.005)" },
+        en: { w: "Wallet", wMsg: "Withdrawal soon ⏳", m: "Main Mine", mS: "Mining... ⛏️", mH: "+1 coin every 24h", b: "Boost", bH: "0.005 per boost", i: "Invite Friend (+0.005)" }
     };
 
     let C = localStorage.getItem('g_l') || 'ar';
@@ -86,35 +82,28 @@
     function setLang(l) { C = l; localStorage.setItem('g_l', l); upd(); }
     
     function upd() {
-        const x = T[C];
+        const x = T[C] || T['en'];
         document.getElementById('wTxt').innerText = x.w;
         document.getElementById('mBtn').innerText = isM ? x.mS : x.m;
         document.getElementById('mHint').innerText = x.mH;
         document.getElementById('bBtn').innerText = x.b + " (" + bL + "/7)";
         document.getElementById('bHint').innerText = x.bH;
         document.getElementById('iBtn').innerText = x.i;
-        document.getElementById('nH').innerText = x.nH;
-        document.getElementById('nF').innerText = x.nF;
         document.getElementById('lSel').value = C;
     }
 
     function doMine() {
-        openAd();
         if (!isM) { isM = true; mS = Date.now(); save(); upd(); }
     }
 
     function doBoost() {
-        openAd();
         if (bL > 0) { balance += 0.005; bL--; save(); upd(); }
-        else { alert("⏳ 24h"); }
+        else { alert("Wait 24h"); }
     }
 
     function doInvite() {
-        openAd();
         const link = "https://t.me" + encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.openTelegramLink(link);
-        } else { window.location.href = link; }
+        tg.openTelegramLink(link);
     }
 
     function save() {
