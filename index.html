@@ -3,72 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GddaFi Play - Crypto Pro</title>
+    <title>GddaFi Play - Pro</title>
+    
+    <!-- ✅ مكتبة تليجرام الرسمية (ضرورية لعمل الأزرار) -->
+    <script src="https://telegram.org"></script>
     
     <!-- ✅ كود أرباح Adsterra الخاص بك -->
     <script src="https://profitablecpmratenetwork.com"></script>
 
     <style>
-        :root { --gold: #ffd700; --royal: #b8860b; --glow: rgba(255, 215, 0, 0.5); }
+        :root { --gold: #ffd700; --royal: #b8860b; --accent: #8a2be2; }
+        
         body { 
             background: #05000a; color: white; font-family: 'Segoe UI', sans-serif; 
             margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;
-            height: 100vh; width: 100vw; overflow: hidden; border: 5px double var(--royal); box-sizing: border-box;
-            touch-action: manipulation;
+            height: 100vh; width: 100vw; overflow: hidden; 
+            /* ✅ إطار واجهة احترافي يواكب زوايا الهاتف */
+            border: 2px solid var(--royal); border-radius: 15px; 
+            box-shadow: inset 0 0 20px rgba(184, 134, 11, 0.4);
+            box-sizing: border-box; touch-action: manipulation;
         }
+
         .header { width: 100%; display: flex; justify-content: space-between; padding: 10px 15px; align-items: center; box-sizing: border-box; }
-        .wallet-btn { background: #111; border: 1.5px solid var(--gold); color: var(--gold); padding: 6px 14px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: bold; }
+        .wallet-btn { background: rgba(255, 215, 0, 0.05); border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: bold; }
 
         .counter-box { margin-top: 5px; text-align: center; }
-        .counter { font-size: 3.8rem; color: var(--gold); font-weight: bold; text-shadow: 0 0 25px gold; line-height: 1; }
-        .currency { font-size: 0.9rem; color: #888; letter-spacing: 2px; margin-top: 5px; }
+        .counter { font-size: 2.8rem; color: var(--gold); font-weight: 800; text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); line-height: 1; }
+        .currency { font-size: 0.75rem; color: #666; letter-spacing: 2px; margin-top: 5px; font-weight: bold; }
 
-        /* ✅ برواز العملة الفخم المطور */
-        .coin-frame {
-            width: 215px; height: 215px;
-            border: 4px solid var(--gold);
-            border-radius: 50%;
+        /* ✅ هالة ضوئية ناعمة وفخمة للعملة */
+        .coin-aura {
+            width: 190px; height: 190px;
+            margin: 15px auto;
+            position: relative;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow);
-            background: radial-gradient(circle, rgba(184, 134, 11, 0.2) 0%, transparent 75%);
-            margin: 10px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.05);
         }
-        .coin-container { width: 180px; height: 180px; position: relative; }
         .gold-coin { 
-            width: 100%; height: 100%; border-radius: 50%; 
+            width: 165px; height: 165px; border-radius: 50%; 
             background: url('coin.png') center/cover no-repeat; 
-            border: 2px solid var(--royal);
-            animation: rotateY 12s linear infinite;
+            border: 1px solid var(--gold);
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.2));
+            animation: rotateY 15s linear infinite;
             cursor: pointer;
         }
         @keyframes rotateY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 
         .fakhama-title { 
-            font-size: 1.3rem; font-weight: bold; color: var(--gold); margin: 5px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); letter-spacing: 3px;
+            font-size: 1rem; font-weight: bold; color: var(--gold); margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5); letter-spacing: 3px;
         }
 
-        .btn-list { display: flex; flex-direction: column; gap: 8px; width: 85%; margin-top: 5px; }
+        /* ✅ أزرار مصغرة وأنيقة جداً */
+        .btn-list { display: flex; flex-direction: column; gap: 10px; width: 75%; }
         .action-btn { 
-            background: linear-gradient(45deg, #2e004f, #8a2be2); border: 2px solid var(--gold);
-            color: white; padding: 14px; border-radius: 35px; font-weight: bold; cursor: pointer; font-size: 1.1rem;
+            background: linear-gradient(135deg, #1a0033, #330066); 
+            border: 1px solid var(--gold);
+            color: white; padding: 8px; border-radius: 20px; 
+            font-weight: 600; cursor: pointer; font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
             transition: 0.2s;
         }
-        .action-btn:active { transform: scale(0.96); }
+        .action-btn:active { transform: scale(0.97); background: var(--accent); }
+
+        .hint-text { font-size: 0.6rem; color: #777; margin-top: -6px; text-align: center; }
 
         .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; height: 55px; background: rgba(10, 0, 20, 0.98); 
-            border-top: 1px solid var(--royal); display: flex; justify-content: space-around; align-items: center;
+            position: fixed; bottom: 0; width: 100%; height: 50px; 
+            background: rgba(5, 0, 10, 0.98); 
+            border-top: 0.5px solid var(--royal); display: flex; justify-content: space-around; align-items: center;
         }
-        .nav-link { color: #666; font-size: 0.65rem; display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; cursor: pointer; }
+        .nav-link { color: #444; font-size: 0.55rem; display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; }
         .nav-link.active { color: var(--gold); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <button id="txt-wallet" class="wallet-btn" onclick="adTrigger(); alert('Coming Soon...')">🏦 المحفظة</button>
-    <select id="langSelect" onchange="changeLang()" style="background:#000; color:gold; border:1px solid gold; border-radius:5px; padding:3px; font-weight:bold;">
+    <button id="txt-wallet" class="wallet-btn" onclick="tg.showAlert('Coming Soon...')">🏦 المحفظة</button>
+    <select id="langSelect" onchange="changeLang()" style="background:#000; color:gold; border:1px solid gold; border-radius:5px; padding:3px; font-size:10px;">
         <option value="ar">العربية 🇸🇦</option>
         <option value="en">English 🇺🇸</option>
         <option value="zh">中文 🇨🇳</option>
@@ -81,35 +96,31 @@
     <div id="txt-tokens" class="currency">GDAFi TOKENS</div>
 </div>
 
-<div class="coin-frame">
-    <div class="coin-container">
-        <div class="gold-coin" onclick="adTrigger(); manualTap()"></div>
-    </div>
+<div class="coin-aura">
+    <div class="gold-coin" onclick="manualTap()"></div>
 </div>
 
 <div id="txt-title" class="fakhama-title">COIN GDDAFI</div>
 
 <div class="btn-list">
-    <button class="action-btn" id="mBtn" onclick="adTrigger(); startMining()">تعدين رئيسي</button>
-    <p class="hint-text" id="mStatus" style="text-align:center; font-size:0.7rem; color:#bbb;">+1 عملة كل 24 ساعة</p>
+    <button class="action-btn" id="mBtn" onclick="startMining()">تعدين رئيسي</button>
+    <p class="hint-text" id="mStatus">+1 عملة كل 24 ساعة</p>
     
-    <button class="action-btn" id="boostBtn" onclick="adTrigger(); doBoost()">تعزيز (<span id="bLeft">7</span>/7)</button>
+    <button class="action-btn" id="boostBtn" onclick="doBoost()">تعزيز (<span id="bLeft">7</span>/7)</button>
     
     <button id="txt-invite" class="action-btn" onclick="doInviteFriends()">إحالة صديق (+0.005)</button>
 </div>
 
 <div class="bottom-nav">
-    <div class="nav-link active">🏠 <span id="nav-home">الرئيسية</span></div>
-    <div class="nav-link" onclick="adTrigger(); alert('Soon')">⛏️ <span id="nav-mine">تعدين</span></div>
-    <div class="nav-link" onclick="adTrigger(); alert('Soon')">📋 <span id="nav-tasks">مهام</span></div>
-    <div class="nav-link" onclick="doInviteFriends()">👥 <span id="nav-friends">أصدقاء</span></div>
+    <div class="nav-link active"><span>🏠</span> <small id="nav-home">الرئيسية</small></div>
+    <div class="nav-link" onclick="tg.showAlert('Soon')"><span>⛏️</span> <small id="nav-mine">تعدين</small></div>
+    <div class="nav-link" onclick="tg.showAlert('Soon')"><span>📋</span> <small id="nav-tasks">مهام</small></div>
+    <div class="nav-link" onclick="doInviteFriends()"><span>👥</span> <small id="nav-friends">أصدقاء</small></div>
 </div>
 
 <script>
-    function adTrigger() {
-        console.log("Adsterra Triggered");
-        // الكود المرفوع في الهيد سيتكفل بالباقي.
-    }
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
     let balance = parseFloat(localStorage.getItem('g_bal')) || 0.000000;
     let bCount = localStorage.getItem('g_bCount') !== null ? parseInt(localStorage.getItem('g_bCount')) : 7;
@@ -136,30 +147,39 @@
         document.getElementById('nav-friends').innerText = t.friends;
     }
 
-    function manualTap() { balance += 0.0001; updateUI(); save(); }
+    function manualTap() { 
+        balance += 0.0001; 
+        tg.HapticFeedback.impactOccurred('light'); // اهتزاز خفيف عند النقر
+        updateUI(); 
+        save(); 
+    }
 
     function startMining() {
-        if(!isMining) {
-            isMining = true;
-            localStorage.setItem('g_mining', 'true');
-            alert("Mining Started! 🚀");
-        } else { alert("Already Mining!"); }
+        if(!isMining) { 
+            isMining = true; 
+            localStorage.setItem('g_mining', 'true'); 
+            tg.showAlert("Mining Started! 🚀"); 
+        }
     }
 
     function doBoost() {
-        if(bCount > 0) {
-            balance += 0.005;
-            bCount--;
-            updateUI();
-            save();
-        } else { alert("No boosts left for today!"); }
+        if(bCount > 0) { 
+            balance += 0.005; 
+            bCount--; 
+            tg.HapticFeedback.impactOccurred('medium');
+            updateUI(); 
+            save(); 
+        } else { tg.showAlert("No boosts left!"); }
     }
 
+    // ✅ تصحيح زر الإحالة النهائي ليعمل داخل تليجرام حصراً
     function doInviteFriends() {
-        adTrigger();
-        // ✅ تم وضع يوزر بوتك هنا بنجاح
-        const text = encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
-        window.open(`https://t.me{text}`, '_blank');
+        const botUser = "GddaFiPlay_bot";
+        const shareText = encodeURIComponent("انضم إلي في تعدين عملة القذافي واربح! 💰");
+        const shareUrl = `https://t.me{botUser}?start=user&text=${shareText}`;
+        
+        // استخدام مكتبة تليجرام لفتح الرابط
+        tg.openTelegramLink(shareUrl);
     }
 
     function updateUI() {
@@ -172,11 +192,8 @@
         localStorage.setItem('g_bCount', bCount);
     }
 
-    setInterval(() => {
-        if(isMining) { balance += (1/86400); updateUI(); save(); }
-    }, 1000);
-
-    updateUI(); 
+    setInterval(() => { if(isMining) { balance += (1/86400); updateUI(); save(); } }, 1000);
+    updateUI();
 </script>
 </body>
 </html>
