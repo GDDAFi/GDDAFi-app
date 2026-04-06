@@ -3,138 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GddaFi Play - Golden Edition</title>
-    
-    <!-- ✅ إصلاح مجهري: رابط الربح الكامل والفعال الخاص بك -->
-    <script src="https://profitablecpmratenetwork.com"></script>
-    
+    <title>GddaFi Play - Pro Edition</title>
     <style>
-        :root {
-            --bg: linear-gradient(135deg, #1a0033 0%, #05000a 100%);
-            --gold: #ffd700;
-            --purple: #8a2be2;
+        :root { --bg: #05000a; --gold: #ffd700; --purple: #8a2be2; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 50px; }
+        .header { width: 100%; padding: 20px; display: flex; justify-content: space-around; }
+        .btn-top { background: rgba(138, 43, 226, 0.2); border: 1px solid var(--purple); color: white; padding: 10px 20px; border-radius: 15px; cursor: pointer; font-weight: bold; }
+        .counter { font-size: 3rem; font-weight: bold; color: var(--gold); text-shadow: 0 0 20px var(--gold); margin: 20px 0; }
+        .coin-box { width: 250px; height: 250px; position: relative; margin: 20px 0; }
+        .gold-coin { 
+            width: 100%; height: 100%; border-radius: 50%; 
+            background: url('https://githubusercontent.com') center/cover; 
+            border: 4px solid #b8860b; box-shadow: 0 0 40px var(--gold);
+            cursor: pointer; transition: transform 0.1s;
         }
-
-        body {
-            background: var(--bg); color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; display: flex; flex-direction: column;
-            align-items: center; height: 100vh; overflow: hidden; text-align: center;
-        }
-
-        .header-controls {
-            width: 100%; padding: 15px; display: flex;
-            justify-content: space-between; box-sizing: border-box; z-index: 100;
-        }
-
-        .lang-select {
-            background: rgba(138, 43, 226, 0.2); border: 1px solid var(--purple);
-            color: white; padding: 8px; border-radius: 10px; cursor: pointer;
-        }
-
-        .boost-btn {
-            width: 55px; height: 55px; border-radius: 50%;
-            background: var(--purple); border: 2px solid var(--gold); color: var(--gold);
-            font-size: 26px; cursor: pointer; display: flex;
-            align-items: center; justify-content: center;
-            box-shadow: 0 0 20px var(--purple); animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .counter {
-            font-size: 3.2rem; font-weight: bold; color: var(--gold);
-            text-shadow: 0 0 30px var(--gold); margin-top: 40px;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        .coin-box { width: 260px; height: 260px; margin: 25px 0; perspective: 1000px; }
-
-        .gold-coin {
-            width: 100%; height: 100%;
-            /* ✅ إصلاح مجهري: رابط مباشر للصورة لضمان ظهور عملة القذافي */
-            background: url('https://wikimedia.org') center/cover;
-            border-radius: 50%;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(0,0,0,0.5);
-            border: 4px solid #b8860b;
-            filter: contrast(1.2) brightness(1.1);
-            animation: rotate3d 6s linear infinite;
-        }
-
-        @keyframes rotate3d {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
-        }
-
-        .mine-btn {
-            background: linear-gradient(45deg, #4b0082, #8a2be2); border: none;
-            color: white; padding: 18px 50px; border-radius: 50px;
-            font-size: 1.3rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s; margin-bottom: 20px;
-        }
-
-        .mine-btn:active { transform: scale(0.9); }
-
-        .ref-btn {
-            color: var(--gold); border: 1px dashed var(--gold);
-            padding: 12px 35px; border-radius: 20px; cursor: pointer;
-            font-size: 15px; background: rgba(255, 215, 0, 0.05);
-        }
+        .gold-coin:active { transform: scale(0.95); }
+        .main-controls { display: flex; flex-direction: column; gap: 15px; width: 80%; }
+        .action-btn { background: linear-gradient(45deg, #4b0082, #8a2be2); border: none; color: white; padding: 15px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .info-text { font-size: 0.9rem; color: #aaa; margin-top: -10px; }
     </style>
 </head>
 <body>
 
-    <div class="header-controls">
-        <select class="lang-select" onchange="changeLanguage(this.value)">
-            <option value="ar">العربية 🇸🇦</option>
-            <option value="en">English 🇺🇸</option>
-            <option value="zh">中文 🇨🇳</option>
-            <option value="fa">فارسی 🇮🇷</option>
-        </select>
-        <button class="boost-btn" onclick="runAds(7)">⚡</button>
+    <div class="header">
+        <button class="btn-top" onclick="alert('السحب قريبآ ⏳')">👛 المحفظة</button>
+        <button class="btn-top" onclick="alert('الإحصائيات قريباً')">📊 الترتيب</button>
     </div>
 
-    <div class="counter" id="balDisplay">0.000116</div>
+    <div class="counter" id="balance">0.000</div>
 
     <div class="coin-box">
-        <div class="gold-coin"></div>
+        <div class="gold-coin" onclick="handleTap()"></div>
     </div>
 
-    <button class="mine-btn" id="mBtn" onclick="runAds(1)">تعدين عملات القذافي ♻️</button>
+    <div class="main-controls">
+        <button class="action-btn" id="mineBtn" onclick="mainMining()">♻️ زر التعدين الرئيسي</button>
+        <p class="info-text" id="mineTime">متاح الآن (+1 عملة)</p>
 
-    <div class="ref-btn" id="rBtn" onclick="runAds(1)">👥 زر الإحالات (+0.005)</div>
+        <button class="action-btn" id="boostBtn" onclick="boostMining()">⚡ زر التعزيز (<span id="boostLeft">7</span>/7)</button>
+        <p class="info-text">يعطيك 0.005 لكل تعزيز</p>
+
+        <button class="action-btn" onclick="inviteFriend()">👥 إحالة صديق (+0.005)</button>
+    </div>
 
     <script>
-        let balance = 0.000116;
-        const speed = 1 / 86400;
+        let balance = parseFloat(localStorage.getItem('g_bal')) || 0;
+        let lastMine = localStorage.getItem('g_lastMine') || 0;
+        let boostCount = parseInt(localStorage.getItem('g_boostCount')) || 7;
+        let lastBoostReset = localStorage.getItem('g_lastBoostReset') || Date.now();
 
-        setInterval(() => {
-            balance += speed;
-            document.getElementById('balDisplay').innerText = balance.toFixed(6);
-        }, 1000);
-
-        function runAds(count) {
-            // ✅ إصلاح مجهري: استدعاء الإعلانات بشكل صحيح
-            if (window.show_8641625) {
-                for(let i=0; i<count; i++) { window.show_8641625(); }
+        // تحديث الواجهة
+        function updateUI() {
+            document.getElementById('balance').innerText = balance.toFixed(3);
+            document.getElementById('boostLeft').innerText = boostCount;
+            
+            let now = Date.now();
+            if (now - lastMine < 86400000) {
+                document.getElementById('mineBtn').style.opacity = "0.5";
+                document.getElementById('mineTime').innerText = "عد بعد 24 ساعة";
+            } else {
+                document.getElementById('mineBtn').style.opacity = "1";
+                document.getElementById('mineTime').innerText = "متاح الآن (+1 عملة)";
             }
-            alert(count > 1 ? "تم تفعيل التعزيز! ⚡" : "بدأ التعدين! 💰");
         }
 
-        function changeLanguage(lang) {
-            const dictionary = {
-                ar: { b: "تعدين عملات القذافي ♻️", r: "👥 زر الإحالات (+0.005)" },
-                en: { b: "Mining Gaddafi tokens ♻️", r: "👥 Referral Button (+0.005)" },
-                zh: { b: "开采卡扎菲代币 ♻️", r: "👥 推荐按钮 (+0.005)" },
-                fa: { b: "استخراج توکن های قذافی ♻️", r: "👥 دکمه ارجاع (+0.005)" }
-            };
-            document.getElementById('mBtn').innerText = dictionary[lang].b;
-            document.getElementById('rBtn').innerText = dictionary[lang].r;
+        // التعدين الرئيسي (مرة كل 24 ساعة)
+        function mainMining() {
+            let now = Date.now();
+            if (now - lastMine >= 86400000) {
+                balance += 1;
+                lastMine = now;
+                localStorage.setItem('g_bal', balance);
+                localStorage.setItem('g_lastMine', lastMine);
+                alert("تم استلام 1 عملة بنجاح! 🎉");
+                updateUI();
+            } else {
+                alert("عذراً، يمكنك التعدين مرة واحدة كل 24 ساعة.");
+            }
         }
+
+        // زر التعزيز (7 مرات كل 24 ساعة)
+        function boostMining() {
+            let now = Date.now();
+            if (now - lastBoostReset >= 86400000) {
+                boostCount = 7;
+                lastBoostReset = now;
+            }
+
+            if (boostCount > 0) {
+                balance += 0.005;
+                boostCount--;
+                localStorage.setItem('g_bal', balance);
+                localStorage.setItem('g_boostCount', boostCount);
+                localStorage.setItem('g_lastBoostReset', lastBoostReset);
+                updateUI();
+            } else {
+                alert("نفدت التعزيزات! انتظر التجديد غداً.");
+            }
+        }
+
+        // إحالة صديق
+        function inviteFriend() {
+            // في البوت الحقيقي، تليجرام سيعرف إذا كانت الإحالة ناجحة عبر رابط الإحالة
+            const botUser = "GddaFiPlay_bot"; 
+            const inviteLink = `https://t.me{botUser}?start=ref${Math.floor(Math.random()*10000)}`;
+            const text = encodeURIComponent(`ابدأ تعدين عملة القذافي معي واربح! 💰\n${inviteLink}`);
+            window.open(`https://t.me{inviteLink}&text=${text}`);
+            
+            // تنبيه للمستخدم بخصوص المكافأة
+            alert("شارك الرابط! ستحصل على 0.005 عند انضمام صديق جديد عبرك.");
+        }
+
+        updateUI();
     </script>
 </body>
 </html>
