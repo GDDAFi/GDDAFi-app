@@ -5,29 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GddaFi Play - Crypto Pro</title>
     
-    <!-- ✅ كود أرباح Adsterra (تم تحسينه) -->
+    <!-- ✅ كود أرباح Adsterra الخاص بك (لا تقم بإزالته) -->
     <script src="https://pl29042900.profitablecpmratenetwork.com/67/d9/1b/67d91bfab7947c9808641625010d7e0c.js"></script>
-    <script>
-        // دالة مساعدة لعرض إعلان من Adsterra (إذا كان متاحاً)
-        function showAdsterraAd() {
-            try {
-                if (typeof adsterra !== 'undefined' && adsterra.show) {
-                    adsterra.show();
-                } else if (typeof Adsterra !== 'undefined' && Adsterra.show) {
-                    Adsterra.show();
-                } else {
-                    // محاولة بديلة: إنشاء إعلان عائم (قد لا يعمل)
-                    console.log("Adsterra not ready yet");
-                }
-            } catch(e) { console.warn("Ad error:", e); }
-        }
-    </script>
     
     <!-- ✅ مكتبة تليجرام الرسمية -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <!-- ✅ مكتبة Howler.js لتشغيل الصوت بسهولة -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 
     <style>
         :root { --gold: #ffd700; --royal: #b8860b; }
@@ -63,7 +45,7 @@
             align-items: center;
         }
 
-        .wallet-btn, .sound-btn {
+        .wallet-btn {
             background: #111;
             border: 1px solid var(--gold);
             color: var(--gold);
@@ -73,7 +55,6 @@
             font-size: 11px;
             font-weight: bold;
         }
-        .sound-btn { margin-left: 8px; }
 
         .counter-box {
             margin-top: 10px;
@@ -199,27 +180,19 @@
             font-size: 18px;
             display: block;
         }
-        
-        /* تلميح الصوت */
-        .sound-hint {
-            position: fixed;
-            bottom: 80px;
-            background: rgba(0,0,0,0.7);
-            color: gold;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            z-index: 100;
+
+        /* إضافة تحسين للتمرير في حال احتاج أي محتوى زائد */
+        .scrollable {
+            overflow-y: auto;
+            flex: 1;
+            width: 100%;
         }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div style="display: flex; gap: 8px;">
-        <button id="txt-wallet" class="wallet-btn">🏦 المحفظة</button>
-        <button id="soundToggle" class="sound-btn">🔊 إيقاف الصوت</button>
-    </div>
+    <button id="txt-wallet" class="wallet-btn">🏦 المحفظة</button>
     <select id="langSelect" style="background:#000; color:gold; border:1px solid gold; border-radius:5px; padding:3px; font-size:10px;">
         <option value="ar">العربية 🇸🇦</option>
         <option value="en">English 🇺🇸</option>
@@ -255,11 +228,37 @@
     <div class="nav-link" data-tab="friends"><b>👥</b> <span id="nav-friends">أصدقاء</span></div>
 </div>
 
-<div id="soundHint" class="sound-hint" style="display:none;">🔊 اضغط في أي مكان لتشغيل الصوت</div>
-
 <script>
     (function() {
-        // ---------- تهيئة تليجرام ----------
+        // ---------- دالة عرض الإعلان من Adsterra ----------
+        function showAdsterraAd() {
+            try {
+                // محاولة استدعاء الإعلان بالطرق المختلفة التي توفرها Adsterra
+                if (window.Adsterra && typeof window.Adsterra.showInterstitial === 'function') {
+                    window.Adsterra.showInterstitial();
+                } else if (window.adsterra && typeof window.adsterra.showInterstitial === 'function') {
+                    window.adsterra.showInterstitial();
+                } else if (window.Adsterra && typeof window.Adsterra.showPopUnder === 'function') {
+                    window.Adsterra.showPopUnder();
+                } else if (window.adsterra && typeof window.adsterra.showPopUnder === 'function') {
+                    window.adsterra.showPopUnder();
+                } else {
+                    console.log("Adsterra not ready yet - سيتم المحاولة لاحقًا");
+                    // في حال لم تكن الشبكة جاهزة بعد، نؤجل المحاولة ثانية واحدة
+                    setTimeout(function() {
+                        try {
+                            if (window.Adsterra && typeof window.Adsterra.showInterstitial === 'function') {
+                                window.Adsterra.showInterstitial();
+                            }
+                        } catch(e) {}
+                    }, 1000);
+                }
+            } catch(e) {
+                console.error("خطأ في عرض الإعلان:", e);
+            }
+        }
+
+        // ---------- تهيئة آمنة لتليجرام ----------
         let tg;
         try {
             tg = window.Telegram?.WebApp;
@@ -267,6 +266,7 @@
             tg.ready();
             tg.expand();
         } catch(e) {
+            // محاكاة للاختبار خارج التليجرام
             tg = {
                 ready: () => {},
                 expand: () => {},
@@ -279,308 +279,142 @@
         }
         window.tg = tg;
 
-        // ---------- نظام الصوت المتقدم (Howler) ----------
-        let rainSound = null;
-        let thunderSound = null;
-        let isSoundOn = false;
-        let soundAllowed = false; // يحتاج تفاعل المستخدم أولاً
-        let rainLoopId = null;
-        let thunderTimeout = null;
-        
-        function initSounds() {
-            if (rainSound) return;
-            // إنشاء أصوات باستخدام Howler (مكتبة قوية)
-            rainSound = new Howl({
-                src: ['https://www.soundjay.com/nature/rain-01.mp3'], // رابط تجريبي لمطر (يمكن استبداله)
-                loop: true,
-                volume: 0.3,
-                autoplay: false
-            });
-            thunderSound = new Howl({
-                src: ['https://www.soundjay.com/nature/thunder-01.mp3'], // رابط تجريبي لرعد
-                volume: 0.6,
-                autoplay: false
-            });
-            // إذا فشل تحميل الروابط، نستخدم Web Audio API كبديل (محلي)
-            if (!rainSound._src || !rainSound._src.length) {
-                // البديل: استخدام Web Audio API لتوليد أصوات صناعية
-                console.log("Using fallback Web Audio");
-                setupFallbackAudio();
-            }
-        }
-        
-        // بديل Web Audio API (صوت مطر ورعد صناعي)
-        let audioCtx = null;
-        let rainInterval = null;
-        function setupFallbackAudio() {
-            try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                rainSound = {
-                    play: () => {
-                        if (rainInterval) clearInterval(rainInterval);
-                        rainInterval = setInterval(() => {
-                            if (!isSoundOn || !soundAllowed) return;
-                            const now = audioCtx.currentTime;
-                            const osc = audioCtx.createOscillator();
-                            const gain = audioCtx.createGain();
-                            osc.type = 'sine';
-                            osc.frequency.value = 2000 + Math.random() * 1000;
-                            gain.gain.value = 0.03;
-                            osc.connect(gain);
-                            gain.connect(audioCtx.destination);
-                            osc.start();
-                            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
-                            osc.stop(now + 0.2);
-                        }, 150);
-                    },
-                    stop: () => {
-                        if (rainInterval) clearInterval(rainInterval);
-                        rainInterval = null;
-                    }
-                };
-                thunderSound = {
-                    play: () => {
-                        if (!isSoundOn || !soundAllowed) return;
-                        const now = audioCtx.currentTime;
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.type = 'sawtooth';
-                        osc.frequency.value = 80;
-                        gain.gain.value = 0.4;
-                        const filter = audioCtx.createBiquadFilter();
-                        filter.type = 'lowpass';
-                        filter.frequency.value = 200;
-                        osc.connect(filter);
-                        filter.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.start();
-                        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
-                        osc.stop(now + 1.5);
-                        osc.frequency.exponentialRampToValueAtTime(30, now + 0.8);
-                    }
-                };
-            } catch(e) { console.warn(e); }
-        }
-        
-        function enableSound() {
-            if (!soundAllowed) {
-                // أول مرة: نطلب تفعيل الصوت بعد تفاعل المستخدم
-                soundAllowed = true;
-                initSounds();
-                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-                isSoundOn = true;
-                if (rainSound) rainSound.play();
-                scheduleRandomThunder();
-                updateSoundButton();
-                document.getElementById('soundHint').style.display = 'none';
-            } else if (!isSoundOn) {
-                isSoundOn = true;
-                if (rainSound) rainSound.play();
-                scheduleRandomThunder();
-                updateSoundButton();
-            }
-        }
-        
-        function disableSound() {
-            isSoundOn = false;
-            if (rainSound) rainSound.stop();
-            if (thunderTimeout) clearTimeout(thunderTimeout);
-            thunderTimeout = null;
-            updateSoundButton();
-        }
-        
-        function toggleSound() {
-            if (!soundAllowed) {
-                enableSound();
-            } else if (isSoundOn) {
-                disableSound();
-            } else {
-                enableSound();
-            }
-        }
-        
-        function scheduleRandomThunder() {
-            if (thunderTimeout) clearTimeout(thunderTimeout);
-            const delay = 20000 + Math.random() * 20000;
-            thunderTimeout = setTimeout(() => {
-                if (isSoundOn && soundAllowed && thunderSound) {
-                    thunderSound.play();
-                }
-                scheduleRandomThunder();
-            }, delay);
-        }
-        
-        function updateSoundButton() {
-            const btn = document.getElementById('soundToggle');
-            if (isSoundOn && soundAllowed) btn.innerHTML = '🔊 إيقاف الصوت';
-            else btn.innerHTML = '🔇 تشغيل الصوت';
-        }
-        
-        // تفعيل الصوت عند أول نقرة (لتفادي قيود المتصفح)
-        function firstInteraction() {
-            if (!soundAllowed) {
-                enableSound();
-            }
-        }
-        
-        // ربط أول نقرة بالصفحة
-        document.body.addEventListener('click', firstInteraction, { once: true });
-        // وأيضاً نربط الأزرار الهامة
-        const interactiveElements = ['coinImg', 'mBtn', 'boostBtn', 'txt-invite', 'txt-wallet', 'langSelect', 'soundToggle'];
-        interactiveElements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.addEventListener('click', firstInteraction);
-        });
-        
-        // إظهار تلميح الصوت إذا لم يتم تفعيله خلال 2 ثانية
-        setTimeout(() => {
-            if (!soundAllowed) {
-                document.getElementById('soundHint').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('soundHint').style.display = 'none';
-                }, 5000);
-            }
-        }, 2000);
-        
-        document.getElementById('soundToggle').addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleSound();
-        });
-        
-        // ---------- إعلانات Adsterra مرتبطة بجميع الأزرار ----------
-        function triggerAdAndAction(actionCallback) {
-            // عرض إعلان Adsterra أولاً
-            try {
-                if (typeof showAdsterraAd === 'function') showAdsterraAd();
-                else if (window.adsterra && window.adsterra.show) window.adsterra.show();
-            } catch(e) {}
-            // تنفيذ الإجراء بعد فترة قصيرة (لإعطاء وقت للإعلان)
-            setTimeout(() => {
-                if (actionCallback) actionCallback();
-            }, 50);
-        }
-        
-        // ---------- نظام التعزيزات المعدل (24 ساعة من آخر إعادة تعيين) ----------
-        let boostCount = 7;
-        let lastResetTimestamp = localStorage.getItem('g_lastResetTimestamp') ? parseInt(localStorage.getItem('g_lastResetTimestamp')) : 0;
-        const ONE_DAY = 24 * 60 * 60 * 1000;
-        
-        function checkAndResetBoosts() {
-            const now = Date.now();
-            if (lastResetTimestamp === 0 || (now - lastResetTimestamp) >= ONE_DAY) {
-                // إعادة ضبط التعزيزات إلى 7
-                boostCount = 7;
-                lastResetTimestamp = now;
-                localStorage.setItem('g_lastResetTimestamp', lastResetTimestamp);
-                localStorage.setItem('g_boostCount', boostCount);
-                updateUI();
-            } else {
-                // استعادة العدد المحفوظ
-                let saved = localStorage.getItem('g_boostCount');
-                if (saved !== null) boostCount = parseInt(saved);
-                else boostCount = 7;
-            }
-        }
-        
-        function useBoost() {
-            if (boostCount > 0) {
-                boostCount--;
-                localStorage.setItem('g_boostCount', boostCount);
-                updateUI();
-                return true;
-            }
-            return false;
-        }
-        
-        // ---------- باقي بيانات اللعبة ----------
-        let balance = parseFloat(localStorage.getItem('g_bal')) || 0.0;
-        let isMining = localStorage.getItem('g_mining') === 'true';
-        
-        // الترجمة
+        // ---------- المتغيرات العامة ----------
+        let balance = 0.0;
+        let bCount = 7;
+        let isMining = false;
+        let lastBoostDate = '';
+
+        // تحميل البيانات من localStorage
+        try {
+            balance = parseFloat(localStorage.getItem('g_bal')) || 0.0;
+            bCount = parseInt(localStorage.getItem('g_bCount')) || 7;
+            isMining = localStorage.getItem('g_mining') === 'true';
+            lastBoostDate = localStorage.getItem('g_lastBoostDate') || '';
+        } catch(e) { console.warn(e); }
+
+        // ---------- الترجمة الكاملة ----------
         const translations = {
-            ar: { wallet: "🏦 المحفظة", tokens: "GDAFi TOKENS", title: "COIN GDDAFI", mine: "تعدين رئيسي", invite: "إحالة صديق (+0.005)", home: "الرئيسية", mining: "تعدين", tasks: "مهام", friends: "أصدقاء", boost: "تعزيز", miningStatus: "+1 عملة كل 24 ساعة", miningActive: "⚠️ التعدين نشط ⚠️", miningInactive: "🔴 التعدين متوقف 🔴" },
-            en: { wallet: "🏦 Wallet", tokens: "GDAFi TOKENS", title: "COIN GDDAFI", mine: "Main Mining", invite: "Invite Friend (+0.005)", home: "Home", mining: "Mine", tasks: "Tasks", friends: "Friends", boost: "Boost", miningStatus: "+1 coin every 24h", miningActive: "⚠️ Mining Active ⚠️", miningInactive: "🔴 Mining Stopped 🔴" },
-            zh: { wallet: "🏦 钱包", tokens: "GDAFi 代币", title: "GDDAFI 金币", mine: "开始采矿", invite: "邀请朋友 (+0.005)", home: "首页", mining: "采矿", tasks: "任务", friends: "朋友", boost: "增强", miningStatus: "每24小时 +1 币", miningActive: "⚠️ 挖矿中 ⚠️", miningInactive: "🔴 挖矿已停止 🔴" },
-            fa: { wallet: "🏦 کیف پول", tokens: "توکن گدافی", title: "سکه گدافی", mine: "استخراج اصلی", invite: "دعوت دوستان (+0.005)", home: "خانه", mining: "استخراج", tasks: "وظایف", friends: "دوستان", boost: "تقویت", miningStatus: "+1 سکه هر ۲۴ ساعت", miningActive: "⚠️ استخراج فعال ⚠️", miningInactive: "🔴 استخراج متوقف 🔴" }
+            ar: {
+                wallet: "🏦 المحفظة", tokens: "GDAFi TOKENS", title: "COIN GDDAFI",
+                mine: "تعدين رئيسي", invite: "إحالة صديق (+0.005)", home: "الرئيسية",
+                mining: "تعدين", tasks: "مهام", friends: "أصدقاء", boost: "تعزيز",
+                miningStatus: "+1 عملة كل 24 ساعة", miningActive: "⚠️ التعدين نشط ⚠️",
+                miningInactive: "🔴 التعدين متوقف 🔴"
+            },
+            en: {
+                wallet: "🏦 Wallet", tokens: "GDAFi TOKENS", title: "COIN GDDAFI",
+                mine: "Main Mining", invite: "Invite Friend (+0.005)", home: "Home",
+                mining: "Mine", tasks: "Tasks", friends: "Friends", boost: "Boost",
+                miningStatus: "+1 coin every 24h", miningActive: "⚠️ Mining Active ⚠️",
+                miningInactive: "🔴 Mining Stopped 🔴"
+            },
+            zh: {
+                wallet: "🏦 钱包", tokens: "GDAFi 代币", title: "GDDAFI 金币",
+                mine: "开始采矿", invite: "邀请朋友 (+0.005)", home: "首页",
+                mining: "采矿", tasks: "任务", friends: "朋友", boost: "增强",
+                miningStatus: "每24小时 +1 币", miningActive: "⚠️ 挖矿中 ⚠️",
+                miningInactive: "🔴 挖矿已停止 🔴"
+            },
+            fa: {
+                wallet: "🏦 کیف پول", tokens: "توکن گدافی", title: "سکه گدافی",
+                mine: "استخراج اصلی", invite: "دعوت دوستان (+0.005)", home: "خانه",
+                mining: "استخراج", tasks: "وظایف", friends: "دوستان", boost: "تقویت",
+                miningStatus: "+1 سکه هر ۲۴ ساعت", miningActive: "⚠️ استخراج فعال ⚠️",
+                miningInactive: "🔴 استخراج متوقف 🔴"
+            }
         };
-        
+
+        // تحديث واجهة المستخدم (الأرقام والنصوص)
         function updateUI() {
             document.getElementById('balDisplay').innerText = balance.toFixed(6);
-            document.getElementById('bLeft').innerText = boostCount;
+            document.getElementById('bLeft').innerText = bCount;
             const lang = document.getElementById('langSelect').value;
             const t = translations[lang];
             if (t) {
                 const statusText = isMining ? t.miningActive : t.miningInactive;
                 document.getElementById('mStatus').innerHTML = t.miningStatus + '<br><small style="color:#ffaa00;">' + statusText + '</small>';
-                document.getElementById('boostBtn').innerHTML = t.boost + ' (<span id="bLeft">' + boostCount + '</span>/7)';
-                document.getElementById('bLeft').innerText = boostCount;
+                document.getElementById('boostBtn').innerHTML = t.boost + ' (<span id="bLeft">' + bCount + '</span>/7)';
+                // إعادة ربط الـ span المحدث (ليس ضروريًا لكن للتوافق)
+                document.getElementById('bLeft').innerText = bCount;
             }
         }
-        
+
+        // حفظ البيانات في localStorage
         function saveData() {
-            localStorage.setItem('g_bal', balance.toFixed(6));
-            localStorage.setItem('g_mining', isMining);
-            localStorage.setItem('g_boostCount', boostCount);
-            localStorage.setItem('g_lastResetTimestamp', lastResetTimestamp);
+            try {
+                localStorage.setItem('g_bal', balance.toFixed(6));
+                localStorage.setItem('g_bCount', bCount);
+                localStorage.setItem('g_mining', isMining);
+                localStorage.setItem('g_lastBoostDate', lastBoostDate);
+            } catch(e) { console.warn(e); }
         }
-        
-        // إجراءات اللعبة مع الإعلانات
+
+        // إعادة تعيين التعزيزات يومياً (يتم فحصها كل دقيقة)
+        function checkDailyReset() {
+            const today = new Date().toDateString();
+            if (lastBoostDate !== today) {
+                bCount = 7;
+                lastBoostDate = today;
+                saveData();
+                updateUI();
+            }
+        }
+
+        // النقر على العملة (مع إعلان)
         function manualTap() {
-            triggerAdAndAction(() => {
-                balance += 0.0001;
-                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            balance += 0.0001;
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            updateUI();
+            saveData();
+        }
+
+        // تشغيل/إيقاف التعدين (مع إعلان)
+        function toggleMining() {
+            if (!isMining) {
+                tg.showConfirm("⚠️ هل تريد بدء التعدين السحابي؟ سيتم إضافة 1 عملة كل 24 ساعة.", (confirmed) => {
+                    if (confirmed) {
+                        isMining = true;
+                        saveData();
+                        updateUI();
+                        tg.showAlert("✅ تم بدء التعدين!");
+                    }
+                });
+            } else {
+                tg.showConfirm("⛔ هل تريد إيقاف التعدين؟", (confirmed) => {
+                    if (confirmed) {
+                        isMining = false;
+                        saveData();
+                        updateUI();
+                        tg.showAlert("🔴 تم إيقاف التعدين.");
+                    }
+                });
+            }
+        }
+
+        // استخدام التعزيز (مع إعلان)
+        function doBoost() {
+            if (bCount > 0) {
+                balance += 0.005;
+                bCount--;
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
                 updateUI();
                 saveData();
-            });
+                tg.showAlert("✨ تمت الإضافة! +0.005 GDAFi");
+            } else {
+                tg.showAlert("❗ نفذت التعزيزات المتاحة! عاود غداً.");
+            }
         }
-        
-        function toggleMining() {
-            triggerAdAndAction(() => {
-                if (!isMining) {
-                    tg.showConfirm("⚠️ هل تريد بدء التعدين السحابي؟", (confirmed) => {
-                        if (confirmed) {
-                            isMining = true;
-                            saveData();
-                            updateUI();
-                            tg.showAlert("✅ تم بدء التعدين!");
-                        }
-                    });
-                } else {
-                    tg.showConfirm("⛔ هل تريد إيقاف التعدين؟", (confirmed) => {
-                        if (confirmed) {
-                            isMining = false;
-                            saveData();
-                            updateUI();
-                            tg.showAlert("🔴 تم إيقاف التعدين.");
-                        }
-                    });
-                }
-            });
-        }
-        
-        function doBoost() {
-            triggerAdAndAction(() => {
-                if (useBoost()) {
-                    balance += 0.005;
-                    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-                    updateUI();
-                    saveData();
-                    tg.showAlert("✨ تمت الإضافة! +0.005 GDAFi");
-                } else {
-                    tg.showAlert("❗ نفذت التعزيزات! انتظر حتى الغد.");
-                }
-            });
-        }
-        
+
+        // دعوة الأصدقاء (مع إعلان)
         function doInviteFriends() {
-            triggerAdAndAction(() => {
-                const botUser = "GddaFiPlay_bot";
-                const shareText = encodeURIComponent("🔥 انضم إلي في تعدين عملة القذافي واربح عملات مجانية! 🔥");
-                const inviteLink = `https://t.me/share/url?url=https://t.me/${botUser}?start=ref_${Math.floor(Date.now() / 1000)}&text=${shareText}`;
-                tg.openTelegramLink(inviteLink);
-            });
+            const botUser = "GddaFiPlay_bot";
+            const shareText = encodeURIComponent("🔥 انضم إلي في تعدين عملة القذافي واربح عملات مجانية! 🔥");
+            const inviteLink = `https://t.me/share/url?url=https://t.me/${botUser}?start=ref_${Math.floor(Date.now() / 1000)}&text=${shareText}`;
+            tg.openTelegramLink(inviteLink);
         }
-        
+
+        // تغيير اللغة (بدون إعلان لأنها قائمة منسدلة)
         function changeLang() {
             const l = document.getElementById('langSelect').value;
             const t = translations[l];
@@ -596,15 +430,16 @@
             document.getElementById('nav-friends').innerText = t.friends;
             updateUI();
         }
-        
-        // التعدين التلقائي
+
+        // ---------- حلقة التعدين التلقائي (كل ثانية) ----------
         let lastTimestamp = Date.now();
         setInterval(() => {
             if (isMining) {
                 const now = Date.now();
                 const secondsPassed = (now - lastTimestamp) / 1000;
                 if (secondsPassed > 0 && secondsPassed < 5) {
-                    balance += (1 / 86400) * secondsPassed;
+                    const increment = (1 / 86400) * secondsPassed;
+                    balance += increment;
                     updateUI();
                     saveData();
                 }
@@ -613,46 +448,73 @@
                 lastTimestamp = Date.now();
             }
         }, 1000);
+
+        // فحص إعادة التعزيزات كل دقيقة
+        setInterval(() => {
+            checkDailyReset();
+        }, 60000);
+
+        // ---------- ربط الأحداث مع عرض الإعلان قبل كل نقرة ----------
+        // زر العملة
+        document.getElementById('coinImg').addEventListener('click', function(e) {
+            showAdsterraAd();
+            manualTap();
+        });
         
-        // ربط الأزرار مع الإعلانات
-        document.getElementById('coinImg').addEventListener('click', manualTap);
-        document.getElementById('mBtn').addEventListener('click', toggleMining);
-        document.getElementById('boostBtn').addEventListener('click', doBoost);
-        document.getElementById('txt-invite').addEventListener('click', doInviteFriends);
+        // زر التعدين الرئيسي
+        document.getElementById('mBtn').addEventListener('click', function(e) {
+            showAdsterraAd();
+            toggleMining();
+        });
+        
+        // زر التعزيز
+        document.getElementById('boostBtn').addEventListener('click', function(e) {
+            showAdsterraAd();
+            doBoost();
+        });
+        
+        // زر الإحالة
+        document.getElementById('txt-invite').addEventListener('click', function(e) {
+            showAdsterraAd();
+            doInviteFriends();
+        });
+        
+        // زر المحفظة
+        document.getElementById('txt-wallet').addEventListener('click', function(e) {
+            showAdsterraAd();
+            tg.showAlert("🔧 قريباً: ربط المحفظة الحقيقية");
+        });
+        
+        // تغيير اللغة (بدون إعلان)
         document.getElementById('langSelect').addEventListener('change', changeLang);
-        document.getElementById('txt-wallet').addEventListener('click', () => triggerAdAndAction(() => tg.showAlert("🔧 قريباً: ربط المحفظة الحقيقية")));
         
+        // الأزرار السفلية
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(btn => {
             btn.addEventListener('click', (e) => {
+                showAdsterraAd();  // إعلان عند كل نقرة على أي زر سفلي
                 const tab = btn.getAttribute('data-tab');
-                if (tab === 'friends') doInviteFriends();
-                else if (tab === 'home') {
+                if (tab === 'friends') {
+                    doInviteFriends();
+                } else if (tab === 'home') {
                     navLinks.forEach(l => l.classList.remove('active'));
                     btn.classList.add('active');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
-                    triggerAdAndAction(() => tg.showAlert("✨ قريباً في التحديث القادم!"));
+                    tg.showAlert("✨ قريباً في التحديث القادم!");
                 }
             });
         });
-        
-        // التهيئة
-        checkAndResetBoosts();
+
+        // تنفيذ الفحص الأولي وتحديث الواجهة
+        checkDailyReset();
         updateUI();
-        changeLang();
-        updateSoundButton();
-        
-        // حفظ البيانات عند الإغلاق
-        window.addEventListener('beforeunload', () => saveData());
-        
-        // استعادة حالة الصوت من localStorage (اختياري)
-        const savedSound = localStorage.getItem('soundEnabled');
-        if (savedSound === 'true') {
-            // سيتم تفعيل الصوت عند أول نقرة
-            soundAllowed = false;
-            isSoundOn = false;
-        }
+        changeLang(); // تطبيق اللغة الافتراضية
+
+        // إضافة حدث للخروج من التطبيق (حفظ نهائي)
+        window.addEventListener('beforeunload', () => {
+            saveData();
+        });
     })();
 </script>
 </body>
